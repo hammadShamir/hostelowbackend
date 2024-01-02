@@ -92,6 +92,11 @@ const authController = {
     }
   },
 
+
+  // REFRESH TOKEN
+  refreshToken: async(req,res)=>{
+    res.send("Working")
+  }
 };
 
 module.exports = authController;
