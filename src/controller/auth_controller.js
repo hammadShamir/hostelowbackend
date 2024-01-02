@@ -2,8 +2,8 @@ const AuthModel = require("../models/auth_model");
 const { validationResult } = require("express-validator");
 
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const ms = require("ms")
+
+const { signAccessToken, signRefreshToken, verifyRefreshToken } = require("../helpers/jwt_helpers");
 
 const authController = {
   // Register User
@@ -26,10 +26,19 @@ const authController = {
           phoneNumber: phoneNumber,
           password: securePassword,
           admin: admin,
-        }).then((user) => {
-          return res
-            .status(200)
-            .send({ message: "Account Created Successfully" });
+        }).then(async (user) => {
+          const accessToken = await signAccessToken(user);
+          const refreshToken = await signRefreshToken(user);
+          return res.send({
+            access: {
+              token: accessToken.token,
+              expires: accessToken.expireTime
+            },
+            refresh: {
+              token: refreshToken.token,
+              expires: refreshToken.expireTime
+            },
+          })
         });
       }
     } catch (error) {
@@ -58,23 +67,18 @@ const authController = {
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (isPasswordValid) {
           const { password, ...userWithoutPassword } = user.toObject();
-          const payload = {
-            user: {
-              id: user.id,
-              admin: user.admin,
-            },
-          };
-          const token = jwt.sign(payload, process.env.JWT_ACCESS, { expiresIn: process.env.JWT_ACCESS_EXPIRE });
-          const refresh = jwt.sign(payload, process.env.JWT_REFRESH, { expiresIn: process.env.JWT_REFRESH_EXPIRE });
+
+          const accessToken = await signAccessToken(user);
+          const refreshToken = await signRefreshToken(user);
 
           const response = {
             access: {
-              token: token,
-              expires: new Date(Date.now() + ms(process.env.JWT_ACCESS_EXPIRE)).toLocaleString()
+              token: accessToken.token,
+              expires: accessToken.expireTime
             },
             refresh: {
-              token: refresh,
-              expires: new Date(Date.now() + ms(process.env.JWT_REFRESH_EXPIRE)).toLocaleString()
+              token: refreshToken.token,
+              expires: refreshToken.expireTime
             },
             user: userWithoutPassword
           }
@@ -88,6 +92,41 @@ const authController = {
     }
   },
 
+
+  // REFRESH TOKEN
+  refreshToken: async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .send({ error: "All fields are required" });
+      } else {
+        await verifyRefreshToken(req.body.refreshToken)
+          .then(async (userId) => {
+            const user = await AuthModel.findOne({ _id: userId })
+            const accessToken = await signAccessToken(user);
+            const refToken = await signRefreshToken(user);
+
+            const response = {
+              access: {
+                token: accessToken.token,
+                expires: accessToken.expireTime
+              },
+              refresh: {
+                token: refToken.token,
+                expires: refToken.expireTime
+              },
+            }
+            res.send(response);
+          }).catch(() => {
+            res.send({ error: "Unauthorized" })
+          })
+      }
+    } catch (error) {
+
+    }
+  }
 };
 
 module.exports = authController;
