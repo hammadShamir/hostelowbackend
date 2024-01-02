@@ -3,7 +3,8 @@ const { validationResult } = require("express-validator");
 
 const bcrypt = require("bcrypt");
 const jwt = require("jsonwebtoken");
-const ms = require("ms")
+const ms = require("ms");
+const { signAccessToken } = require("../helpers/jwt_helpers");
 
 const authController = {
   // Register User
@@ -26,10 +27,9 @@ const authController = {
           phoneNumber: phoneNumber,
           password: securePassword,
           admin: admin,
-        }).then((user) => {
-          return res
-            .status(200)
-            .send({ message: "Account Created Successfully" });
+        }).then(async (user) => {
+          const accessToken = await signAccessToken(user);
+          return res.send({ accessToken })
         });
       }
     } catch (error) {
