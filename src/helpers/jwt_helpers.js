@@ -63,5 +63,19 @@ module.exports = {
                 }
             })
         })
+    },
+    verifyRefreshToken: (refToken) => {
+        return new Promise((resolve, reject) => {
+            const secret = process.env.REFRESH_TOKEN_SECRET;
+            jwt.verify(refToken, secret, (err, payload) => {
+                if (err) {
+                    return reject()
+                } else {
+                    const userId = payload.aud
+                    resolve(userId)
+                }
+            })
+        }
+        )
     }
 }
