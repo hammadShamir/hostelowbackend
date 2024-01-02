@@ -94,8 +94,19 @@ const authController = {
 
 
   // REFRESH TOKEN
-  refreshToken: async(req,res)=>{
-    res.send("Working")
+  refreshToken: async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .send({ error: "All fields are required" });
+      } else {
+        res.send("Working")
+      }
+    } catch (error) {
+
+    }
   }
 };
 
