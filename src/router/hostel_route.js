@@ -8,9 +8,7 @@ const { check } = require("express-validator");
 hostelRouter.get("/hostel/getHostels", HostelController.getHostels);
 
 // POST ALL HOSTELS
-hostelRouter.post(
-  "/hostel/createhostel",
-  verifyAdminToken,
+hostelRouter.post("/hostel/createhostel", verifyAdminToken,
   [
     check("thumbnail", "Please Enter thumbnail").not().isEmpty().trim().escape(),
     check("title", "Please Enter a Title").not().isEmpty().trim().escape()

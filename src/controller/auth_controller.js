@@ -3,7 +3,7 @@ const { validationResult } = require("express-validator");
 
 const bcrypt = require("bcrypt");
 
-const { signAccessToken } = require("../helpers/jwt_helpers");
+const { signAccessToken, signRefreshToken } = require("../helpers/jwt_helpers");
 
 const authController = {
   // Register User
@@ -60,17 +60,17 @@ const authController = {
           const { password, ...userWithoutPassword } = user.toObject();
 
           const accessToken = await signAccessToken(user);
-          const { token, expireTime } = accessToken;
+          const refreshToken = await signRefreshToken(user);
 
           const response = {
             access: {
-              token: token,
-              expires: expireTime
+              token: accessToken.token,
+              expires: accessToken.expireTime
             },
-            // refresh: {
-            //   token: refresh,
-            //   expires: new Date(Date.now() + ms(process.env.JWT_REFRESH_EXPIRE)).toLocaleString()
-            // },
+            refresh: {
+              token: refreshToken.token,
+              expires: refreshToken.expireTime
+            },
             user: userWithoutPassword
           }
           res.json(response);

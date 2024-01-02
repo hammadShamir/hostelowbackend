@@ -2,7 +2,8 @@ const express = require("express");
 const app = express();
 const cors = require('cors');
 const morgan = require('morgan');
-const mongoose = require("./src/config/db");
+
+require("./src/config/db");
 require("dotenv").config();
 
 // Import Models
