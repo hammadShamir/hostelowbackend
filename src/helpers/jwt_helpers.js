@@ -5,7 +5,7 @@ module.exports = {
     signAccessToken: (user) => {
         return new Promise((resolve, reject) => {
             const secret = process.env.ACCESS_TOKEN_SECRET;
-            const expireIn = '7 days'
+            const expireIn = '4h'
             const options = {
                 expiresIn: expireIn,
                 issuer: "hostelow.com",
@@ -47,7 +47,7 @@ module.exports = {
     signRefreshToken: (user) => {
         return new Promise((resolve, reject) => {
             const secret = process.env.REFRESH_TOKEN_SECRET;
-            const expireIn = '4h'
+            const expireIn = '7 days'
             const options = {
                 expiresIn: expireIn,
                 issuer: "hostelow.com",

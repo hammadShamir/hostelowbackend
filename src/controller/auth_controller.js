@@ -28,8 +28,17 @@ const authController = {
           admin: admin,
         }).then(async (user) => {
           const accessToken = await signAccessToken(user);
-          const { token, expireTime } = accessToken;
-          return res.send({ token, expireTime })
+          const refreshToken = await signRefreshToken(user);
+          return res.send({
+            access: {
+              token: accessToken.token,
+              expires: accessToken.expireTime
+            },
+            refresh: {
+              token: refreshToken.token,
+              expires: refreshToken.expireTime
+            },
+          })
         });
       }
     } catch (error) {
