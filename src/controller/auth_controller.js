@@ -3,7 +3,7 @@ const { validationResult } = require("express-validator");
 
 const bcrypt = require("bcrypt");
 
-const { signAccessToken, signRefreshToken } = require("../helpers/jwt_helpers");
+const { signAccessToken, signRefreshToken, verifyRefreshToken } = require("../helpers/jwt_helpers");
 
 const authController = {
   // Register User
@@ -102,7 +102,26 @@ const authController = {
           .status(400)
           .send({ error: "All fields are required" });
       } else {
-        res.send("Working")
+        await verifyRefreshToken(req.body.refreshToken)
+          .then(async (userId) => {
+            const user = await AuthModel.findOne({ _id: userId })
+            const accessToken = await signAccessToken(user);
+            const refToken = await signRefreshToken(user);
+
+            const response = {
+              access: {
+                token: accessToken.token,
+                expires: accessToken.expireTime
+              },
+              refresh: {
+                token: refToken.token,
+                expires: refToken.expireTime
+              },
+            }
+            res.send(response);
+          }).catch(() => {
+            res.send({ error: "Unauthorized" })
+          })
       }
     } catch (error) {
 

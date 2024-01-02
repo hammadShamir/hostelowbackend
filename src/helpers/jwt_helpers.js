@@ -70,10 +70,9 @@ module.exports = {
             jwt.verify(refToken, secret, (err, payload) => {
                 if (err) {
                     return reject()
-                } else {
-                    const userId = payload.aud
-                    resolve(userId)
                 }
+                const userId = payload.aud
+                resolve(userId)
             })
         }
         )
