@@ -1,6 +1,6 @@
 const hostelRouter = require("express").Router();
 const HostelController = require("../controller/hostel_controller");
-const getAdmin = require("../middleware/getAdmin");
+const { verifyAdminToken } = require("../helpers/jwt_helpers");
 const HostelModel = require("../models/hostel_model");
 const { check } = require("express-validator");
 
@@ -8,9 +8,7 @@ const { check } = require("express-validator");
 hostelRouter.get("/hostel/getHostels", HostelController.getHostels);
 
 // POST ALL HOSTELS
-hostelRouter.post(
-  "/hostel/createhostel",
-  getAdmin,
+hostelRouter.post("/hostel/createhostel", verifyAdminToken,
   [
     check("thumbnail", "Please Enter thumbnail").not().isEmpty().trim().escape(),
     check("title", "Please Enter a Title").not().isEmpty().trim().escape()
