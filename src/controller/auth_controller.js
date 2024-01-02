@@ -2,8 +2,7 @@ const AuthModel = require("../models/auth_model");
 const { validationResult } = require("express-validator");
 
 const bcrypt = require("bcrypt");
-const jwt = require("jsonwebtoken");
-const ms = require("ms");
+
 const { signAccessToken } = require("../helpers/jwt_helpers");
 
 const authController = {
@@ -29,7 +28,8 @@ const authController = {
           admin: admin,
         }).then(async (user) => {
           const accessToken = await signAccessToken(user);
-          return res.send({ accessToken })
+          const { token, expireTime } = accessToken;
+          return res.send({ token, expireTime })
         });
       }
     } catch (error) {
@@ -58,24 +58,19 @@ const authController = {
         const isPasswordValid = await bcrypt.compare(password, user.password);
         if (isPasswordValid) {
           const { password, ...userWithoutPassword } = user.toObject();
-          const payload = {
-            user: {
-              id: user.id,
-              admin: user.admin,
-            },
-          };
-          const token = jwt.sign(payload, process.env.JWT_ACCESS, { expiresIn: process.env.JWT_ACCESS_EXPIRE });
-          const refresh = jwt.sign(payload, process.env.JWT_REFRESH, { expiresIn: process.env.JWT_REFRESH_EXPIRE });
+
+          const accessToken = await signAccessToken(user);
+          const { token, expireTime } = accessToken;
 
           const response = {
             access: {
               token: token,
-              expires: new Date(Date.now() + ms(process.env.JWT_ACCESS_EXPIRE)).toLocaleString()
+              expires: expireTime
             },
-            refresh: {
-              token: refresh,
-              expires: new Date(Date.now() + ms(process.env.JWT_REFRESH_EXPIRE)).toLocaleString()
-            },
+            // refresh: {
+            //   token: refresh,
+            //   expires: new Date(Date.now() + ms(process.env.JWT_REFRESH_EXPIRE)).toLocaleString()
+            // },
             user: userWithoutPassword
           }
           res.json(response);

@@ -1,12 +1,12 @@
 const AmentitiesRouter = require("express").Router();
 const RoomsController = require("../controller/rooms_controller");
 const { check } = require("express-validator");
-const getAdmin = require("../middleware/getAdmin");
+const { verifyAdminToken } = require("../helpers/jwt_helpers");
 
 // POST ALL ROOMS for a Hostel
 AmentitiesRouter.post(
     "/hostel/addRooms",
-    // getAdmin,
+    verifyAdminToken,
     [
         check("hostelId", "Please Enter Hostel ID").not().isEmpty().trim().escape(),
         check("type", "Please Enter Room Type").not().isEmpty().trim().escape(),
