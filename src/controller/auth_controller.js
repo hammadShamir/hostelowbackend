@@ -1,9 +1,11 @@
 const AuthModel = require("../models/auth_model");
+const OTPModel = require("../models/otp_model");
 const { validationResult } = require("express-validator");
 
 const bcrypt = require("bcrypt");
 
 const { signAccessToken, signRefreshToken, verifyRefreshToken } = require("../helpers/jwt_helpers");
+const { generateOTP, sendEmail } = require("../helpers/email_otp_verification");
 
 const authController = {
   // Register User
@@ -124,9 +126,25 @@ const authController = {
           })
       }
     } catch (error) {
-
+      res.status(500).send({ error: "Internal Server Error" })
     }
-  }
+  },
+  sendEmail: async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .send({ error: "All fields are required" });
+      } else {
+        const { userId, email } = req.body;
+        const otp = generateOTP()
+        const sentEmail = sendEmail(userId, email, otp)
+      }
+    } catch (error) {
+      res.status(500).send({ error: "Internal Server Error" })
+    }
+  },
 };
 
 module.exports = authController;
