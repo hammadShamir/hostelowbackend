@@ -34,8 +34,13 @@ authRouter.post("/auth/login", [
     check("password", "Password cannot be blank").exists(),
 ], AuthController.loginUser);
 
-authRouter.post("/auth/refreshToken",[
+authRouter.post("/auth/refreshToken", [
     check("refreshToken").not().isEmpty().trim().escape()
 ], AuthController.refreshToken);
+
+authRouter.post("/auth/sendEmail", [
+    check("userId").not().isEmpty().trim().escape(),
+    check("email").not().isEmpty().trim().escape()
+], AuthController.sendEmail)
 
 module.exports = authRouter;
