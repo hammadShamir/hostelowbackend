@@ -15,7 +15,7 @@ const hostelController = {
           .status(400)
           .send({ error: "All fields are required" });
       } else {
-        const { thumbnail, title, desc, price, location, rating } = req.body;
+        const { thumbnail, title, desc, price, location, rating, discountPrice, isPublished } = req.body;
         await HostelModel.create({
           userId: req.user.id,
           thumbnail: thumbnail,
@@ -24,6 +24,8 @@ const hostelController = {
           price: price,
           location: location,
           rating: rating,
+          isPublished: isPublished,
+          discountPrice: discountPrice,
         }).then((user) => {
           return res.status(200).send(user);
         });
@@ -76,6 +78,8 @@ const hostelController = {
           location: element.location,
           rating: element.rating,
           date: element.date,
+          discountPrice: element.discountPrice,
+          isPublished: element.isPublished,
           amentities: amenities
             ? {
               freeWifi: amenities.freeWifi,
