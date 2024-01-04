@@ -29,18 +29,7 @@ const authController = {
           password: securePassword,
           admin: admin,
         }).then(async (user) => {
-          const accessToken = await signAccessToken(user);
-          const refreshToken = await signRefreshToken(user);
-          return res.send({
-            access: {
-              token: accessToken.token,
-              expires: accessToken.expireTime
-            },
-            refresh: {
-              token: refreshToken.token,
-              expires: refreshToken.expireTime
-            },
-          })
+          return res.send({ message: "Registration Success" })
         });
       }
     } catch (error) {
