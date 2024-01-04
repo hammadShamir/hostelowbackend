@@ -1,9 +1,17 @@
 
 const nodemailer = require("nodemailer")
+const otpGenerator = require("otp-generator");
+
 module.exports = {
     generateOTP: () => {
-        const otp = Math.floor( Math.random() * 900);
-        return otp
+        const OTP = otpGenerator.generate(6, {
+            digits: true,
+            upperCaseAlphabets: false,
+            specialChars: false,
+            lowerCaseAlphabets: false
+        });
+
+        return OTP;
     },
     sendEmail: (userId, email, otp) => {
         let transporter = nodemailer.createTransport({
