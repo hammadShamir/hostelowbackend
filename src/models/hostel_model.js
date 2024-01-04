@@ -23,9 +23,20 @@ const hostelSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
+
+
   location: {
     type: String,
     required: true,
+  },
+
+  discountPrice: {
+    type: Number,
+  },
+
+  isPublished: {
+    type: Boolean,
+    default: false,
   },
   rating: {
     type: Number,
