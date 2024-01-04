@@ -5,7 +5,7 @@ const { validationResult } = require("express-validator");
 const bcrypt = require("bcrypt");
 
 const { signAccessToken, signRefreshToken, verifyRefreshToken } = require("../helpers/jwt_helpers");
-const { generateOTP, sendEmail } = require("../helpers/email_otp_verification");
+const { generateOTP, sendEmail } = require("../helpers/otpVerification");
 
 const authController = {
   // Register User
@@ -130,9 +130,9 @@ const authController = {
         const otp = generateOTP()
         const sentEmail = await sendEmail(userId, email, otp)
         if (sentEmail.success) {
-          res.send(sentEmail.message)
+          res.send({ message: sentEmail.message })
         } else {
-          res.send(sentEmail.message)
+          res.send({ error: sentEmail.message })
         }
       }
     } catch (error) {

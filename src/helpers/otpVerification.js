@@ -34,7 +34,7 @@ module.exports = {
 
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
-                    reject({ success: false, message: error.message });
+                    reject({ success: false, message: "Email sending Error" });
                 } else {
                     resolve({ success: true, message: "Email Sent Successfully" });
                 }
