@@ -139,10 +139,15 @@ const authController = {
       } else {
         const { userId, email } = req.body;
         const otp = generateOTP()
-        const sentEmail = sendEmail(userId, email, otp)
+        const sentEmail = await sendEmail(userId, email, otp)
+        if (sentEmail.success) {
+          res.send(sentEmail.message)
+        } else {
+          res.send(sentEmail.message)
+        }
       }
     } catch (error) {
-      res.status(500).send({ error: "Internal Server Error" })
+      res.status(500).send({ error: error.message })
     }
   },
 };
