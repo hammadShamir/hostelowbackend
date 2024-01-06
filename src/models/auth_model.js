@@ -29,6 +29,7 @@ const authSchema = mongoose.Schema({
         type: Boolean,
         default: false
     },
+    profile: { type: String },
     date: {
         type: Date,
         default: Date.now
