@@ -153,6 +153,35 @@ const authController = {
         }
       }
     } catch (error) {
+      res.status(500).send({ error: "Internal Server Error" })
+    }
+  },
+  verifyOTP: async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .send({ error: "All fields are required" });
+      } else {
+        const doesOTP = await OTPModel.findOne({ userId: req.body.userId });
+        if (!doesOTP) {
+          res.status(404).send({ error: "OTP Expired" });
+        } else {
+          const { otp } = doesOTP;
+          if (otp == req.body.otp) {
+            const updateUser = await AuthModel.updateOne({ _id: req.body.userId }, { isVerified: true });
+            if (updateUser) {
+              res.status(200).send({ message: "Email Verification Success" })
+            } else {
+              res.status(500).send({ error: "Internal Server Error" })
+            }
+          } else {
+            res.status(400).send({ error: "Bad Request" });
+          }
+        }
+      }
+    } catch (error) {
       res.status(500).send({ error: error.message })
     }
   },
