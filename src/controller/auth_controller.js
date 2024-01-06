@@ -126,19 +126,42 @@ const authController = {
           .status(400)
           .send({ error: "All fields are required" });
       } else {
+        let emailResult;
         const { userId, email } = req.body;
-        const otp = generateOTP()
-        const sentEmail = await sendEmail(userId, email, otp)
-        if (sentEmail.success) {
-          res.send({ message: sentEmail.message })
+        const genOtp = generateOTP()
+        const doesOTP = await OTPModel.findOne({ userId: userId });
+        if (!doesOTP) {
+          const newOTP = await OTPModel.create({
+            userId: userId,
+            otp: genOtp
+          })
+          emailResult = await sendEmail(userId, email, genOtp)
         } else {
-          res.send({ error: sentEmail.message })
+          const deleteOTP = await OTPModel.deleteOne({ userId: userId });
+          if (deleteOTP) {
+            const newOTP = await OTPModel.create({
+              userId: userId,
+              otp: genOtp
+            })
+            emailResult = await sendEmail(userId, email, genOtp)
+          }
+        }
+        if (emailResult.success) {
+          res.send({ message: emailResult.message })
+        } else {
+          res.send({ error: emailResult.message })
         }
       }
     } catch (error) {
       res.status(500).send({ error: error.message })
     }
   },
+  fetchOTP: (req, res) => {
+    OTPModel.find()
+      .then((otp) => {
+        res.send(otp)
+      })
+  }
 };
 
 module.exports = authController;

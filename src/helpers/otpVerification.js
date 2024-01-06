@@ -1,7 +1,7 @@
 
 const nodemailer = require("nodemailer")
 const otpGenerator = require("otp-generator");
-
+const OTPModel = require("../models/otp_model");
 module.exports = {
     generateOTP: () => {
         const OTP = otpGenerator.generate(6, {
@@ -40,5 +40,21 @@ module.exports = {
                 }
             });
         });
+    },
+    verifyUser: (userId) => {
+        return new Promise((resolve, reject) => {
+            const oldOTP = OTPModel.findOne({ userId: userId });
+            const otp = this.generateOTP();
+            if (oldOTP) {
+                
+                const newOTP = OTPModel.create({
+                    userId: userId,
+                    otp: otp
+                })
+                if (newOTP) {
+                    resolve({ success: true, message: "Email Sent Successfully" });
+                }
+            }
+        })
     }
 }
