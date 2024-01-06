@@ -118,6 +118,7 @@ const authController = {
       res.status(500).send({ error: "Internal Server Error" })
     }
   },
+
   sendEmail: async (req, res) => {
     try {
       const errors = validationResult(req);
@@ -139,6 +140,36 @@ const authController = {
       res.status(500).send({ error: error.message })
     }
   },
+
+  // Account Update
+  updateAccount: async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).send({ error: "All fields are required" });
+      } else {
+        const { userId, email, ...updatedFields } = req.body;
+
+        const userFound = await AuthModel.findOne({ _id: userId });
+
+        if (!userFound) {
+          return res.send({ message: 'User not found' });
+        } else {
+          delete updatedFields.email;
+          delete updatedFields.password;
+
+          await AuthModel.findOneAndUpdate({ _id: userId }, { $set: updatedFields }, { new: true });
+
+          return res.send({ message: 'User data updated successfully' });
+        }
+      }
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  },
+
+
+
 };
 
 module.exports = authController;
