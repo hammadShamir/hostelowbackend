@@ -144,29 +144,28 @@ const authController = {
   // Account Update
   updateAccount: async (req, res) => {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res.status(400).send({ error: "All fields are required" });
+      const userFound = await AuthModel.findOne({ _id: req.params.userId });
+      if (!userFound) {
+        return res.send({ error: 'User not found' });
       } else {
-        const { userId, email, ...updatedFields } = req.body;
-
-        const userFound = await AuthModel.findOne({ _id: userId });
-
-        if (!userFound) {
-          return res.send({ message: 'User not found' });
-        } else {
-          delete updatedFields.email;
-          delete updatedFields.password;
-
-          await AuthModel.findOneAndUpdate({ _id: userId }, { $set: updatedFields }, { new: true });
-
-          return res.send({ message: 'User data updated successfully' });
+        const { email, password, newPassword, ...updatedFields } = req.body;
+        if (password) {
+          const isPasswordValid = await bcrypt.compare(password, userFound.password);
+          if (!isPasswordValid) {
+            return res.status(400).send({ erro: 'Wrong old Password' });
+          }
+          const salt = await bcrypt.genSalt(10);
+          const securePassword = bcrypt.hashSync(newPassword, salt);
+          updatedFields.password = securePassword;
         }
+        await AuthModel.updateOne({ _id: req.params.userId }, { $set: updatedFields });
+        return res.send({ message: 'Account Updated' });
       }
     } catch (error) {
       res.status(500).send({ error: error.message });
     }
   },
+
 
 
 
