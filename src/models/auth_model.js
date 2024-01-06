@@ -25,6 +25,10 @@ const authSchema = mongoose.Schema({
         type: Boolean,
         required: true
     },
+    isVerified: {
+        type: Boolean,
+        default: false
+    },
     date: {
         type: Date,
         default: Date.now

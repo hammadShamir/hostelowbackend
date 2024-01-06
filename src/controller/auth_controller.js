@@ -21,19 +21,20 @@ const authController = {
           req.body;
         const salt = await bcrypt.genSalt(10);
         const securePassword = bcrypt.hashSync(password, salt);
-        await AuthModel.create({
+        const newUser = await AuthModel.create({
           firstName: firstName,
           lastName: lastName,
           email: email,
           phoneNumber: phoneNumber,
           password: securePassword,
           admin: admin,
-        }).then(async (user) => {
-          return res.send({ message: "Registration Success" })
         });
+        if (newUser) {
+          return res.send({ message: "Registration Success" })
+        }
       }
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      return res.status(500).send({ error: "Internal Server Error" });
     }
   },
 
@@ -52,7 +53,7 @@ const authController = {
 
         // Check if user exists
         if (!user) {
-          return res.status(401).send({ errors: 'Invalid credentials' });
+          return res.status(404).send({ errors: 'Invalid credentials' });
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -60,7 +61,13 @@ const authController = {
           const { password, ...userWithoutPassword } = user.toObject();
 
           const accessToken = await signAccessToken(user);
-          const refreshToken = await signRefreshToken(user);
+          if (!accessToken) {
+            res.status(500).send({ error: "Internal Server" })
+          }
+          const refToken = await signRefreshToken(user);
+          if (!refToken) {
+            res.status(500).send({ error: "Internal Server" })
+          }
 
           const response = {
             access: {
@@ -68,18 +75,18 @@ const authController = {
               expires: accessToken.expireTime
             },
             refresh: {
-              token: refreshToken.token,
-              expires: refreshToken.expireTime
+              token: refToken.token,
+              expires: refToken.expireTime
             },
             user: userWithoutPassword
           }
-          res.json(response);
+          res.status(200).send(response);
         } else {
-          return res.status(401).send({ errors: 'Invalid credentials' });
+          return res.status(404).send({ errors: 'Invalid credentials' });
         }
       }
     } catch (error) {
-      return res.status(400).send({ error: error.message });
+      return res.status(500).send({ error: "Internal Server Error" });
     }
   },
 
@@ -93,31 +100,37 @@ const authController = {
           .status(400)
           .send({ error: "All fields are required" });
       } else {
-        await verifyRefreshToken(req.body.refreshToken)
-          .then(async (userId) => {
-            const user = await AuthModel.findOne({ _id: userId })
-            const accessToken = await signAccessToken(user);
-            const refToken = await signRefreshToken(user);
-
-            const response = {
-              access: {
-                token: accessToken.token,
-                expires: accessToken.expireTime
-              },
-              refresh: {
-                token: refToken.token,
-                expires: refToken.expireTime
-              },
-            }
-            res.send(response);
-          }).catch(() => {
-            res.send({ error: "Unauthorized" })
-          })
+        const userID = await verifyRefreshToken(req.body.refreshToken);
+        if (userID) {
+          const user = await AuthModel.findOne({ _id: userID })
+          const accessToken = await signAccessToken(user);
+          if (!accessToken) {
+            res.status(500).send({ error: "Internal Server Error" })
+          }
+          const refToken = await signRefreshToken(user);
+          if (!refToken) {
+            res.status(500).send({ error: "Internal Server Error" })
+          }
+          const response = {
+            access: {
+              token: accessToken.token,
+              expires: accessToken.expireTime
+            },
+            refresh: {
+              token: refToken.token,
+              expires: refToken.expireTime
+            },
+          }
+          res.send(response);
+        } else {
+          res.send({ error: "Unauthorized" })
+        }
       }
     } catch (error) {
       res.status(500).send({ error: "Internal Server Error" })
     }
   },
+  // SEND EMAIL WITH OTP
   sendEmail: async (req, res) => {
     try {
       const errors = validationResult(req);
@@ -126,17 +139,64 @@ const authController = {
           .status(400)
           .send({ error: "All fields are required" });
       } else {
+        let emailResult;
         const { userId, email } = req.body;
-        const otp = generateOTP()
-        const sentEmail = await sendEmail(userId, email, otp)
-        if (sentEmail.success) {
-          res.send({ message: sentEmail.message })
+        const genOtp = generateOTP()
+        const doesOTP = await OTPModel.findOne({ userId: userId });
+        if (!doesOTP) {
+          const newOTP = await OTPModel.create({
+            userId: userId,
+            otp: genOtp
+          })
+          emailResult = await sendEmail(userId, email, genOtp)
         } else {
-          res.send({ error: sentEmail.message })
+          const deleteOTP = await OTPModel.deleteOne({ userId: userId });
+          if (deleteOTP) {
+            const newOTP = await OTPModel.create({
+              userId: userId,
+              otp: genOtp
+            })
+            emailResult = await sendEmail(userId, email, genOtp)
+          }
+        }
+        if (emailResult.success) {
+          res.send({ message: emailResult.message })
+        } else {
+          res.send({ error: emailResult.message })
         }
       }
     } catch (error) {
-      res.status(500).send({ error: error.message })
+      res.status(500).send({ error: "Internal Server Error" })
+    }
+  },
+  // OTP VERIFICATION
+  verifyOTP: async (req, res) => {
+    try {
+      const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res
+          .status(400)
+          .send({ error: "All fields are required" });
+      } else {
+        const doesOTP = await OTPModel.findOne({ userId: req.body.userId });
+        if (!doesOTP) {
+          res.status(404).send({ error: "OTP Expired" });
+        } else {
+          const { otp } = doesOTP;
+          if (otp == req.body.otp) {
+            const updateUser = await AuthModel.updateOne({ _id: req.body.userId }, { isVerified: true });
+            if (updateUser) {
+              res.status(200).send({ message: "Email Verification Success" })
+            } else {
+              res.status(500).send({ error: "Internal Server Error" })
+            }
+          } else {
+            res.status(400).send({ error: "Bad Request" });
+          }
+        }
+      }
+    } catch (error) {
+      res.status(500).send({ error: "Internal Server Error" })
     }
   },
 };
