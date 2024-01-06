@@ -13,7 +13,7 @@ module.exports = {
             }
             jwt.sign({ admin: user.admin }, secret, options, (err, token) => {
                 if (err) {
-                    reject(res.send({ error: "Internal Server Error" }))
+                    return reject()
                 } else {
                     const expireTime = new Date(Date.now() + ms(expireIn)).toLocaleString()
                     const result = { token, expireTime }
@@ -55,7 +55,7 @@ module.exports = {
             }
             jwt.sign({ admin: user.admin }, secret, options, (err, token) => {
                 if (err) {
-                    reject(res.send({ error: "Internal Server Error" }))
+                    return reject()
                 } else {
                     const expireTime = new Date(Date.now() + ms(expireIn)).toLocaleString()
                     const result = { token, expireTime }

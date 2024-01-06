@@ -34,7 +34,7 @@ module.exports = {
 
             transporter.sendMail(mailOptions, (error, info) => {
                 if (error) {
-                    reject({ success: false, message: "Email sending Error" });
+                    reject({ success: false, message: "Internal Server Error" });
                 } else {
                     resolve({ success: true, message: "Email Sent Successfully" });
                 }
@@ -46,7 +46,7 @@ module.exports = {
             const oldOTP = OTPModel.findOne({ userId: userId });
             const otp = this.generateOTP();
             if (oldOTP) {
-                
+
                 const newOTP = OTPModel.create({
                     userId: userId,
                     otp: otp
