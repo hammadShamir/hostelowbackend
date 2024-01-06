@@ -221,7 +221,7 @@ const authController = {
         return res.send({ message: 'Account Updated' });
       }
     } catch (error) {
-      res.status(500).send({ error: error.message });
+      res.status(500).send({ error: error.message, message: 'error' });
     }
   },
 
