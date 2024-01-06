@@ -43,7 +43,13 @@ authRouter.post("/auth/sendEmail", [
     check("email").not().isEmpty().trim().escape()
 ], AuthController.sendEmail)
 
-authRouter.post("/auth/accountUpdate/:userId", AuthController.updateAccount);
+authRouter.post("/auth/verifyOTP", [
+    check("userId").not().isEmpty().trim().escape(),
+    check("otp").not().isEmpty().trim().escape(),
+], AuthController.verifyOTP);
 
 
+authRouter.post("/auth/updateAccount/:userId ", AuthController.updateAccount);
+
+authRouter
 module.exports = authRouter;
