@@ -199,6 +199,35 @@ const authController = {
       res.status(500).send({ error: "Internal Server Error" })
     }
   },
+
+  // Account Update
+  updateAccount: async (req, res) => {
+    try {
+      const userFound = await AuthModel.findOne({ _id: req.params.userId });
+      if (!userFound) {
+        return res.send({ error: 'User not found' });
+      } else {
+        const { email, password, newPassword, ...updatedFields } = req.body;
+        if (password) {
+          const isPasswordValid = await bcrypt.compare(password, userFound.password);
+          if (!isPasswordValid) {
+            return res.status(400).send({ erro: 'Wrong old Password' });
+          }
+          const salt = await bcrypt.genSalt(10);
+          const securePassword = bcrypt.hashSync(newPassword, salt);
+          updatedFields.password = securePassword;
+        }
+        await AuthModel.updateOne({ _id: req.params.userId }, { $set: updatedFields });
+        return res.send({ message: 'Account Updated' });
+      }
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  },
+
+
+
+
 };
 
 module.exports = authController;
