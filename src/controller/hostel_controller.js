@@ -13,7 +13,7 @@ const hostelController = {
       if (!errors.isEmpty()) {
         return res
           .status(400)
-          .send({ error: "All fields are required" });
+          .send({ error: errors.array().map((err) => err.msg)[0] });
       } else {
         const { thumbnail, title, desc, price, location, rating, discountPrice, isPublished } = req.body;
         await HostelModel.create({

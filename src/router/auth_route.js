@@ -5,15 +5,15 @@ const { check } = require("express-validator");
 
 authRouter.post("/auth/register", [
     // Register User Validation
-    check('firstName', "Please Enter a First Name")
+    check('firstName', "First Name Required")
         .not().isEmpty().trim().escape(),
-    check('lastName', "Please Enter a Last Name")
+    check('lastName', "Last Name Required")
         .not().isEmpty().trim().escape(),
-    check('phoneNumber', "Please Enter a Valid Phone Number")
-        .not().isEmpty().isNumeric().toInt().isLength({ min: 12, max: 12 }).trim().escape(),
+    check('phoneNumber', "Valid Phone Number Required")
+        .not().isEmpty().trim().escape(),
     check("password", "Password must be Strong")
         .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/),
-    check("email").isEmail().custom((value, { req }) => {
+    check("email", "Email Required").isEmail().custom((value, { req }) => {
         return new Promise((resolve, reject) => {
             AuthModel.findOne({ 'email': req.body.email }).then((user) => {
                 if (user) {
@@ -30,12 +30,14 @@ authRouter.post("/auth/register", [
 
 
 authRouter.post("/auth/login", [
-    check("email", "Enter a valid email").isEmail(),
-    check("password", "Password cannot be blank").exists(),
+    check("email", "Enter a valid email")
+        .not().isEmpty().trim().escape().isEmail(),
+    check("password", "Password cannot be blank")
+        .not().isEmpty().trim().escape(),
 ], AuthController.loginUser);
 
 authRouter.post("/auth/refreshToken", [
-    check("refreshToken").not().isEmpty().trim().escape()
+    check("refreshToken", "Bad Request").not().isEmpty().trim().escape()
 ], AuthController.refreshToken);
 
 authRouter.post("/auth/sendEmail", [
