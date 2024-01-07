@@ -6,7 +6,7 @@ const AmentittiesSchema = new mongoose.Schema({
     ref: "hostel",
     required: true,
   },
-  freeWifi: {
+  wifi: {
     type: Boolean,
     default: false,
   },
