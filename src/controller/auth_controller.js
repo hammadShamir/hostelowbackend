@@ -211,7 +211,7 @@ const authController = {
         if (password) {
           const isPasswordValid = await bcrypt.compare(password, userFound.password);
           if (!isPasswordValid) {
-            return res.status(400).send({ erro: 'Wrong old Password' });
+            return res.status(400).send({ error : 'Wrong old Password' });
           }
           const salt = await bcrypt.genSalt(10);
           const securePassword = bcrypt.hashSync(newPassword, salt);
