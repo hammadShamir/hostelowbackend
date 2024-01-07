@@ -3,8 +3,8 @@ const app = express();
 const cors = require('cors');
 const morgan = require('morgan');
 
-require("./src/config/db");
 require("dotenv").config();
+require("./src/helpers/init_mongoDb");
 
 // Import Models
 const newsletterRouter = require("./src/router/newsletter_route");

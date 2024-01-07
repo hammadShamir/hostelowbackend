@@ -32,7 +32,7 @@ module.exports = {
         const bearerToken = authHeader.split(' ');
         const token = bearerToken[1];
         const secret = process.env.ACCESS_TOKEN_SECRET;
-
+        
         jwt.verify(token, secret, (err, payload) => {
             if (err) {
                 if (err.name === "JsonWebTokenError") {
@@ -43,6 +43,28 @@ module.exports = {
             } else {
                 const { admin, isVerified } = payload;
                 if (!admin && !isVerified) return res.send({ error: "Unauthorized" })
+                req.payload = payload;
+                next()
+            }
+        })
+    },
+    verifyUserToken: (req, res, next) => {
+        if (!req.headers['authorization']) return res.send({ error: "Unauthorized" })
+        const authHeader = req.headers['authorization']
+        const bearerToken = authHeader.split(' ');
+        const token = bearerToken[1];
+        const secret = process.env.ACCESS_TOKEN_SECRET;
+
+        jwt.verify(token, secret, (err, payload) => {
+            if (err) {
+                if (err.name === "JsonWebTokenError") {
+                    return res.send({ error: "Unauthorized" })
+                } else {
+                    return res.send({ error: "JWT Expired" })
+                }
+            } else {
+                const { admin, isVerified } = payload;
+                if (admin && !isVerified) return res.send({ error: "Unauthorized" })
                 req.payload = payload;
                 next()
             }
