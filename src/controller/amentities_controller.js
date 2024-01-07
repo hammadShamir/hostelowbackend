@@ -11,7 +11,6 @@ const amentitiesController = {
           .send({ error: "All fields are required" });
       }
 
-
       const { hostelId, ...amenities } = req.body;
 
       await AmentityModel.findOne({ hostelId })
