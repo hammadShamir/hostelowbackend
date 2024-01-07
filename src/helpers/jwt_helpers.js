@@ -4,14 +4,18 @@ const ms = require("ms");
 module.exports = {
     signAccessToken: (user) => {
         return new Promise((resolve, reject) => {
-            const secret = process.env.ACCESS_TOKEN_SECRET;
             const expireIn = '4h'
+            const secret = process.env.ACCESS_TOKEN_SECRET;
+            const payload = {
+                admin: user.admin,
+                isVerified: user.isVerified
+            }
             const options = {
                 expiresIn: expireIn,
                 issuer: "hostelow.com",
                 audience: user.id
             }
-            jwt.sign({ admin: user.admin }, secret, options, (err, token) => {
+            jwt.sign(payload, secret, options, (err, token) => {
                 if (err) {
                     return reject()
                 } else {
@@ -37,8 +41,8 @@ module.exports = {
                     return res.send({ error: "JWT Expired" })
                 }
             } else {
-                const admin = payload.admin;
-                if (!admin) return res.send({ error: "Unauthorized" })
+                const { admin, isVerified } = payload;
+                if (!admin && !isVerified) return res.send({ error: "Unauthorized" })
                 req.payload = payload;
                 next()
             }
@@ -46,14 +50,18 @@ module.exports = {
     },
     signRefreshToken: (user) => {
         return new Promise((resolve, reject) => {
-            const secret = process.env.REFRESH_TOKEN_SECRET;
             const expireIn = '7 days'
+            const secret = process.env.REFRESH_TOKEN_SECRET;
+            const payload = {
+                admin: user.admin,
+                isVerified: user.isVerified
+            }
             const options = {
                 expiresIn: expireIn,
                 issuer: "hostelow.com",
                 audience: user.id
             }
-            jwt.sign({ admin: user.admin }, secret, options, (err, token) => {
+            jwt.sign(payload, secret, options, (err, token) => {
                 if (err) {
                     return reject()
                 } else {
