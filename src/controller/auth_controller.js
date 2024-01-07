@@ -46,7 +46,7 @@ const authController = {
       if (!errors.isEmpty()) {
         return res
           .status(400)
-          .send({ error: "All fields are required" });
+          .send({ error: errors.array().map((err) => err.msg)[0] });
       } else {
         const { email, password } = req.body;
         const user = await AuthModel.findOne({ email });
@@ -98,7 +98,7 @@ const authController = {
       if (!errors.isEmpty()) {
         return res
           .status(400)
-          .send({ error: "All fields are required" });
+          .send({ error: errors.array().map((err) => err.msg)[0] });
       } else {
         const userID = await verifyRefreshToken(req.body.refreshToken);
         if (userID) {
