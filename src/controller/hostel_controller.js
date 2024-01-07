@@ -17,7 +17,8 @@ const hostelController = {
       } else {
         const { thumbnail, title, desc, price, location, rating, discountPrice, isPublished } = req.body;
         await HostelModel.create({
-          userId: req.user.id,
+          // userId: req.user.id,
+          userId: req.payload.aud,
           thumbnail: thumbnail,
           title: title,
           desc: desc,
