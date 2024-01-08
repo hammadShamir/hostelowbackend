@@ -7,7 +7,7 @@ module.exports = {
             const expireIn = '4h'
             const secret = process.env.ACCESS_TOKEN_SECRET;
             const payload = {
-                admin: user.admin,
+                roll: user.roll,
                 isVerified: user.isVerified
             }
             const options = {
@@ -32,19 +32,27 @@ module.exports = {
         const bearerToken = authHeader.split(' ');
         const token = bearerToken[1];
         const secret = process.env.ACCESS_TOKEN_SECRET;
-        
+
         jwt.verify(token, secret, (err, payload) => {
-            if (err) {
-                if (err.name === "JsonWebTokenError") {
-                    return res.send({ error: "Unauthorized" })
+            try {
+                if (err) {
+                    if (err.name === "JsonWebTokenError") {
+                        return res.send({ error: "Unauthorized" })
+                    } else {
+                        return res.send({ error: "JWT Expired" })
+                    }
                 } else {
-                    return res.send({ error: "JWT Expired" })
+                    const { roll, isVerified } = payload;
+                    console.log(payload);
+                    if (roll === "admin" && isVerified) {
+                        req.payload = payload;
+                        next()
+                    } else {
+                        return res.send({ error: "Unauthorized" })
+                    }
                 }
-            } else {
-                const { admin, isVerified } = payload;
-                if (!admin && !isVerified) return res.send({ error: "Unauthorized" })
-                req.payload = payload;
-                next()
+            } catch (error) {
+                return res.send({ error: "Internal Server Error" })
             }
         })
     },
@@ -63,10 +71,13 @@ module.exports = {
                     return res.send({ error: "JWT Expired" })
                 }
             } else {
-                const { admin, isVerified } = payload;
-                if (admin && !isVerified) return res.send({ error: "Unauthorized" })
-                req.payload = payload;
-                next()
+                const { roll, isVerified } = payload;
+                if (roll === "user" && isVerified) {
+                    req.payload = payload;
+                    next()
+                } else {
+                    return res.send({ error: "Unauthorized" })
+                }
             }
         })
     },
@@ -75,7 +86,7 @@ module.exports = {
             const expireIn = '7 days'
             const secret = process.env.REFRESH_TOKEN_SECRET;
             const payload = {
-                admin: user.admin,
+                roll: user.roll,
                 isVerified: user.isVerified
             }
             const options = {
