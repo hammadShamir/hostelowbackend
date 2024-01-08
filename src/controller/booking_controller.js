@@ -36,7 +36,7 @@ const bookingController = {
                         checkOutDate: checkOutDate,
                         totalAmount: totalAmount,
                     });
-                    return res.status(200).send({ message: "Status Changed" });
+                    return res.status(200).send({ message: newBooking });
                 }
             }
         } catch (error) {

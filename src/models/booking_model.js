@@ -3,22 +3,22 @@ const mongoose = require('mongoose');
 const bookingSchema = new mongoose.Schema({
     hostelId: {
         type: String,
-        // ref: 'hostel',
+        ref: 'hostel',
         required: true
     },
     hostelname: {
         type: String,
-        // ref: 'hostel',
+        ref: 'hostel',
         required: true
     },
     userId: {
         type: String,
-        // ref: 'auth',
+        ref: 'auth',
         required: true
     },
     roomId: {
         type: String,
-        // ref: 'rooms',
+        ref: 'rooms',
         required: true
     },
     bookingDate: {
