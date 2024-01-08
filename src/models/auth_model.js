@@ -21,8 +21,9 @@ const authSchema = mongoose.Schema({
         type: String,
         required: true
     },
-    admin: {
-        type: Boolean,
+    roll: {
+        type: String,
+        enum : ["user","admin",'superadmin'],
         required: true
     },
     isVerified: {

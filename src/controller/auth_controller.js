@@ -17,7 +17,7 @@ const authController = {
           .status(400)
           .send({ error: errors.array().map((err) => err.msg)[0] });
       } else {
-        const { firstName, lastName, email, phoneNumber, password, admin } =
+        const { firstName, lastName, email, phoneNumber, password, roll } =
           req.body;
         const salt = await bcrypt.genSalt(10);
         const securePassword = bcrypt.hashSync(password, salt);
@@ -27,7 +27,7 @@ const authController = {
           email: email,
           phoneNumber: phoneNumber,
           password: securePassword,
-          admin: admin,
+          roll: roll,
         });
         if (newUser) {
           return res.send({ message: "Registration Success" })
@@ -211,7 +211,7 @@ const authController = {
         if (password) {
           const isPasswordValid = await bcrypt.compare(password, userFound.password);
           if (!isPasswordValid) {
-            return res.status(400).send({ error : 'Wrong old Password' });
+            return res.status(400).send({ error: 'Wrong old Password' });
           }
           const salt = await bcrypt.genSalt(10);
           const securePassword = bcrypt.hashSync(newPassword, salt);
