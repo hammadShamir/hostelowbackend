@@ -40,7 +40,7 @@ const bookingController = {
                 }
             }
         } catch (error) {
-            return res.status(500).send({ error: "Internal Server Error", message: error });
+            return res.status(500).send({ error: "Internal Server Error" });
         }
     },
 
@@ -60,7 +60,7 @@ const bookingController = {
 
 
         } catch (error) {
-            return res.status(500).send({ error: "Internal Server Error", message: error });
+            return res.status(500).send({ error: "Internal Server Error" });
         }
     }
 
