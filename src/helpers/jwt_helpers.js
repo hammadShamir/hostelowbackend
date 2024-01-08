@@ -19,7 +19,7 @@ module.exports = {
                 if (err) {
                     return reject()
                 } else {
-                    const expireTime = new Date(Date.now() + ms(expireIn)).toLocaleString()
+                    const expireTime = new Date(Date.now() + ms(expireIn)).toISOString()
                     const result = { token, expireTime }
                     resolve(result)
                 }
@@ -87,7 +87,7 @@ module.exports = {
                 if (err) {
                     return reject()
                 } else {
-                    const expireTime = new Date(Date.now() + ms(expireIn)).toLocaleString()
+                    const expireTime = new Date(Date.now() + ms(expireIn)).toISOString()
                     const result = { token, expireTime }
                     resolve(result)
                 }
