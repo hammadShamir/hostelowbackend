@@ -7,7 +7,7 @@ module.exports = {
             const expireIn = '4h'
             const secret = process.env.ACCESS_TOKEN_SECRET;
             const payload = {
-                roll: user.roll,
+                role: user.role,
                 isVerified: user.isVerified
             }
             const options = {
@@ -42,9 +42,9 @@ module.exports = {
                         return res.send({ error: "JWT Expired" })
                     }
                 } else {
-                    const { roll, isVerified } = payload;
+                    const { role, isVerified } = payload;
                     console.log(payload);
-                    if (roll === "admin" && isVerified) {
+                    if (role === "admin" && isVerified) {
                         req.payload = payload;
                         next()
                     } else {
@@ -71,8 +71,8 @@ module.exports = {
                     return res.send({ error: "JWT Expired" })
                 }
             } else {
-                const { roll, isVerified } = payload;
-                if (roll === "user" && isVerified) {
+                const { role, isVerified } = payload;
+                if (role === "user" && isVerified) {
                     req.payload = payload;
                     next()
                 } else {
@@ -86,7 +86,7 @@ module.exports = {
             const expireIn = '7 days'
             const secret = process.env.REFRESH_TOKEN_SECRET;
             const payload = {
-                roll: user.roll,
+                role: user.role,
                 isVerified: user.isVerified
             }
             const options = {
