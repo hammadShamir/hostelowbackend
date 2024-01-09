@@ -17,7 +17,7 @@ const authController = {
           .status(400)
           .send({ error: errors.array().map((err) => err.msg)[0] });
       } else {
-        const { firstName, lastName, email, phoneNumber, password, roll } =
+        const { firstName, lastName, email, phoneNumber, password, role } =
           req.body;
         const salt = await bcrypt.genSalt(10);
         const securePassword = bcrypt.hashSync(password, salt);
@@ -27,7 +27,7 @@ const authController = {
           email: email,
           phoneNumber: phoneNumber,
           password: securePassword,
-          roll: roll,
+          role: role,
         });
         if (newUser) {
           return res.send({ message: "Registration Success" })

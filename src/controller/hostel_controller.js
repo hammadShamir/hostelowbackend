@@ -111,6 +111,19 @@ const hostelController = {
       return res.status(500).send({ error: error.message });
     }
   },
+  searchHostel: async (req, res) => {
+    try {
+      // const { price } = req.query;
+      // let queryObject = {}
+      // if (price) {
+      //   queryObject.price = price
+      // }
+      const hostels = await HostelModel.find(req.query);
+      res.send(hostels)
+    } catch (error) {
+      res.status(500).send({ error: error.message })
+    }
+  }
 };
 
 module.exports = hostelController;

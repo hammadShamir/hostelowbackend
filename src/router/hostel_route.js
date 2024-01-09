@@ -4,9 +4,6 @@ const { verifyAdminToken } = require("../helpers/jwt_helpers");
 const HostelModel = require("../models/hostel_model");
 const { check } = require("express-validator");
 
-// GET ALL HOSTELS
-hostelRouter.get("/hostel/getHostels", HostelController.getHostels);
-
 // POST ALL HOSTELS
 hostelRouter.post("/hostel/createhostel", verifyAdminToken,
   [
@@ -34,4 +31,9 @@ hostelRouter.post("/hostel/createhostel", verifyAdminToken,
   HostelController.addHostel
 );
 
+// GET ALL HOSTELS
+hostelRouter.get("/hostel/getHostels", HostelController.getHostels);
+
+// SEARCH AND FILTER HOSTEL
+hostelRouter.get("/hostel/search", HostelController.searchHostel)
 module.exports = hostelRouter;
