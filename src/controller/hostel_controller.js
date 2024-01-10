@@ -68,7 +68,6 @@ const hostelController = {
         const hostelWithAmenities = {
           _id: element._id,
           userId: element.userId,
-          thumbnail: element.thumbnail,
           title: element.title,
           desc: element.desc,
           price: element.price,
@@ -98,6 +97,7 @@ const hostelController = {
             }
             : null,
           rooms: roomsArray.length > 0 ? roomsArray : null,
+          thumbnail: element.thumbnail,
         };
         hostelsWithAmenities.push(hostelWithAmenities);
       }
