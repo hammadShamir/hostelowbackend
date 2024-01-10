@@ -34,6 +34,7 @@ const bookingController = {
                         checkInDate: checkInDate,
                         checkOutDate: checkOutDate,
                         totalAmount: totalAmount,
+                        status: status,
                     });
                     return res.status(200).send({ message: newBooking });
                 }
