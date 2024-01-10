@@ -102,7 +102,7 @@ const hostelController = {
             }
             : null,
           rooms: roomsArray.length > 0 ? roomsArray : null,
-          images: gallery ? gallery.images : null,
+          images: gallery ? gallery : null,
         };
         hostelsWithAmenities.push(hostelWithAmenities);
       }

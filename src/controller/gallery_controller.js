@@ -20,7 +20,7 @@ const galleryController = {
             img2: img2,
             img3: img3,
             img4: img4,
-            others: others
+            others: others.push(...others)
           })
           if (updateGallery) {
             res.status(200).send({ message: "Gallery Updated Successfully" })
