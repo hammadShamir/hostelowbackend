@@ -6,8 +6,23 @@ const gallerySchema = mongoose.Schema({
     ref: "hostel",
     required: true,
   },
-
-  images: Array,
+  img0: {
+    type: String,
+  },
+  img1: {
+    type: String,
+  },
+  img2: {
+    type: String,
+  },
+  img3: {
+    type: String,
+  },
+  img4: {
+    type: String,
+  },
+  
+  others: Array,
 
   date: {
     type: Date,

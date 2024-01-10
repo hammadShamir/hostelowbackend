@@ -102,13 +102,13 @@ const hostelController = {
             }
             : null,
           rooms: roomsArray.length > 0 ? roomsArray : null,
-          images: gallery ? gallery.images : null,
+          images: gallery ? gallery : null,
         };
         hostelsWithAmenities.push(hostelWithAmenities);
       }
       res.send({ hostels: hostelsWithAmenities });
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      return res.status(500).send({ error: "Internal Server Error" });
     }
   },
 };
