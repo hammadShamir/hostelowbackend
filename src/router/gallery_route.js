@@ -9,7 +9,6 @@ galleryRouter.post(
   verifyAdminToken,
   [
     check("hostelId", "Please Enter Hostel ID").not().isEmpty().trim().escape(),
-    check("images", "Please provide valid Images").isArray(),
   ],
   GalleryController.addGallery
 );
