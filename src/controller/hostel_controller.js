@@ -67,6 +67,7 @@ const hostelController = {
 
         const hostelWithAmenities = {
           _id: element._id,
+          userId: element.userId,
           thumbnail: element.thumbnail,
           title: element.title,
           desc: element.desc,
