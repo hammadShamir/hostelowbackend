@@ -8,11 +8,10 @@ const bookingController = {
     addBooking: async (req, res) => {
         try {
             const errors = validationResult(req);
-            console.log(errors);
             if (!errors.isEmpty()) {
                 return res
                     .status(400)
-                    .send({ error: errors.array().map((err) => err.msg[0]) });
+                    .send({ error: 'All fields are required' });
             } else {
                 const { hostelId, hostelname, userId, roomId, bookingDate, checkInDate, checkOutDate, totalAmount, status } = req.body;
                 const existingBooking = await BookingModel.findOne({
