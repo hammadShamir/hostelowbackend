@@ -47,7 +47,8 @@ const bookingController = {
 
     getBookingsByHostelOrUser: async (req, res) => {
         try {
-            const { hostelId, userId } = req.body;
+            const { hostelId, userId } = req.query;
+
             let bookings;
             if (hostelId) {
                 bookings = await BookingModel.findOne({ hostelId: hostelId });
@@ -56,9 +57,6 @@ const bookingController = {
             }
 
             return res.status(200).send(bookings);
-
-
-
         } catch (error) {
             return res.status(500).send({ error: "Internal Server Error" });
         }
