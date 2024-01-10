@@ -11,23 +11,34 @@ const galleryController = {
           .status(400)
           .send({ error: "All fields are required" });
       } else {
-        const { hostelId, images } = req.body;
-
-        await GalleryModel.findOne({ hostelId })
-          .then(async (item) => {
-            if (item) {
-              item.images.push(...images)
-              await item.save();
-            } else {
-              GalleryModel.create({
-                hostelId: hostelId,
-                images: images,
-              })
-            }
-            return res.status(200).send({ message: "Gallery Updated" });
-          }).catch(() => {
-            res.status(400).send({ error: "Data not valid" })
+        const { hostelId, img0, img1, img2, img3, img4, others } = req.body;
+        const gallery = await GalleryModel.findOne({ hostelId });
+        if (gallery) {
+          updateGallery = await GalleryModel.updateMany({ hostelId: hostelId }, {
+            img0: img0,
+            img1: img1,
+            img2: img2,
+            img3: img3,
+            img4: img4,
+            others: others
           })
+          if (updateGallery) {
+            res.status(200).send({ message: "Gallery Updated Successfully" })
+          }
+        } else {
+          createGallery = await GalleryModel.create({
+            hostelId: hostelId,
+            img0: img0,
+            img1: img1,
+            img2: img2,
+            img3: img3,
+            img4: img4,
+            others: others
+          })
+          if (createGallery) {
+            res.status(200).send({ message: "Gallery Created Successfully" })
+          }
+        }
       }
     } catch (error) {
       return res.status(500).send({ error: "Internal Server Error" });
