@@ -52,6 +52,7 @@ authRouter.post("/auth/verifyOTP", [
 
 
 authRouter.post("/auth/updateAccount/:userId", AuthController.updateAccount);
+authRouter.get("/auth/user", AuthController.getAllUsers);
 
 authRouter
 module.exports = authRouter;

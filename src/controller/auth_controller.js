@@ -226,6 +226,15 @@ const authController = {
   },
 
 
+  // Get All Users
+  getAllUsers: async (req, res) => {
+    try {
+      const allUsers = await AuthModel.find();
+      res.status(200).send(allUsers);
+    } catch (error) {
+      res.status(500).send({ error: error.message });
+    }
+  },
 
 
 };
