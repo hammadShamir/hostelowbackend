@@ -77,15 +77,7 @@ const hostelController = {
           discountPrice: element.discountPrice,
           isPublished: element.isPublished,
           amentities: amenities
-            ? {
-              freeWifi: amenities.freeWifi,
-              privateBathroom: amenities.privateBathroom,
-              freeParking: amenities.freeParking,
-              helpDesk: amenities.helpDesk,
-              airCondition: amenities.airCondition,
-              keyAccess: amenities.keyAccess,
-              transportation: amenities.transportation,
-            }
+            ? amenities
             : null,
           reviews: hostelReviews
             ? {
@@ -136,7 +128,6 @@ const hostelController = {
           images: room.images,
           occupancy: room.occupancy
         }));
-        console.log(gallery);
         const hostelData = {
           _id: hostel._id,
           userId: hostel.userId,
@@ -149,15 +140,7 @@ const hostelController = {
           discountPrice: hostel.discountPrice,
           isPublished: hostel.isPublished,
           amentities: amenities
-            ? {
-              freeWifi: amenities.freeWifi,
-              privateBathroom: amenities.privateBathroom,
-              freeParking: amenities.freeParking,
-              helpDesk: amenities.helpDesk,
-              airCondition: amenities.airCondition,
-              keyAccess: amenities.keyAccess,
-              transportation: amenities.transportation,
-            }
+            ? amenities
             : null,
           reviews: hostelReviews
             ? {
