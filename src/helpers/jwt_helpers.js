@@ -4,7 +4,7 @@ const ms = require("ms");
 module.exports = {
     signAccessToken: (user) => {
         return new Promise((resolve, reject) => {
-            const expireIn = '4h'
+            const expireIn = '8h'
             const secret = process.env.ACCESS_TOKEN_SECRET;
             const payload = {
                 role: user.role,
