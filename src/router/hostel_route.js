@@ -35,4 +35,14 @@ hostelRouter.post("/hostel/createhostel", verifyAdminToken,
   HostelController.addHostel
 );
 
+// POST ALL HOSTELS
+hostelRouter.post("/hostel/updateHostel", verifyAdminToken,
+  [
+    check("hostelId", "Please provide hostelId").not().isEmpty().trim().escape(),
+
+  ],
+  HostelController.updateHostel
+);
+
+
 module.exports = hostelRouter;
