@@ -122,7 +122,7 @@ const hostelController = {
         const rooms = await RoomModel.find({
           hostelId: hostel._id,
         });
-        const gallery = await GalleryModel.find({
+        const gallery = await GalleryModel.findOne({
           hostelId: hostel._id,
         });
 
@@ -136,7 +136,7 @@ const hostelController = {
           images: room.images,
           occupancy: room.occupancy
         }));
-
+        console.log(gallery);
         const hostelData = {
           _id: hostel._id,
           userId: hostel.userId,
@@ -170,12 +170,12 @@ const hostelController = {
             : null,
           rooms: roomsArray.length > 0 ? roomsArray : null,
           gallery: gallery ? {
-            img0: gallery[0].img0,
-            img1: gallery[0].img1,
-            img2: gallery[0].img2,
-            img3: gallery[0].img3,
-            img4: gallery[0].img4,
-            others: gallery[0].others
+            img0: gallery?.img0,
+            img1: gallery?.img1,
+            img2: gallery?.img2,
+            img3: gallery?.img3,
+            img4: gallery?.img4,
+            others: gallery?.others
           } : null,
           thumbnail: hostel.thumbnail,
         };

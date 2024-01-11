@@ -23,6 +23,7 @@ const galleryController = {
             others: others
           })
           if (updateGallery) {
+            console.log(updateGallery);
             res.status(200).send({ message: "Gallery Updated Successfully" })
           }
         } else {
@@ -36,6 +37,7 @@ const galleryController = {
             others: others
           })
           if (createGallery) {
+            console.log(createGallery);
             res.status(200).send({ message: "Gallery Created Successfully" })
           }
         }
