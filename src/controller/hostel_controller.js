@@ -214,6 +214,37 @@ const hostelController = {
     }
   },
 
+  // Delete Hostel
+  deleteHostel: async (req, res) => {
+    const hostelId = req.params.id;
+    const userId = req.payload.aud;
+
+    try {
+      const hostelToDelete = await HostelModel.findById(hostelId);
+
+      if (!hostelToDelete) {
+        return res.status(404).json({ message: 'Hostel not found' });
+      }
+
+      if (hostelToDelete.userId !== userId) {
+        return res.status(403).json({ message: 'You are not the owner of this hostel' });
+      }
+
+      const deletedHostel = await HostelModel.findByIdAndDelete(hostelId);
+
+      if (!deletedHostel) {
+        return res.status(404).json({ message: 'Hostel not found' });
+      }
+
+      return res.json({ message: 'Hostel deleted successfully' });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  }
+
+
+
 };
 
 module.exports = hostelController;
