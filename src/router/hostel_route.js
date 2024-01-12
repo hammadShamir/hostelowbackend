@@ -45,7 +45,7 @@ hostelRouter.post("/hostel/updateHostel", verifyAdminToken,
 );
 
 // POST ALL HOSTELS
-hostelRouter.delete("/hostel/deleteHostel", verifyAdminToken,
+hostelRouter.delete("/hostel/deleteHostel",
   [
     check("hostelId", "Please provide hostelId").not().isEmpty().trim().escape(),
   ],
