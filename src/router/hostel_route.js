@@ -44,5 +44,12 @@ hostelRouter.post("/hostel/updateHostel", verifyAdminToken,
   HostelController.updateHostel
 );
 
+// POST ALL HOSTELS
+hostelRouter.delete("/hostel/deleteHostel", verifyAdminToken,
+  [
+    check("hostelId", "Please provide hostelId").not().isEmpty().trim().escape(),
+  ],
+  HostelController.deleteHostel
+);
 
 module.exports = hostelRouter;
