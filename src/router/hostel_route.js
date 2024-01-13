@@ -11,7 +11,6 @@ hostelRouter.get("/hostel/getHostelById", HostelController.getHostelByID);
 // POST ALL HOSTELS
 hostelRouter.post("/hostel/createhostel", verifyAdminToken,
   [
-    check("thumbnail", "Please Enter thumbnail").not().isEmpty().trim().escape(),
     check("title", "Please Enter a Title").not().isEmpty().trim().escape()
       .custom((value, { req }) => {
         return new Promise((resolve, reject) => {
@@ -28,7 +27,6 @@ hostelRouter.post("/hostel/createhostel", verifyAdminToken,
             });
         });
       }),
-    check("desc", "Please Enter a Description").not().isEmpty().trim().escape(),
     check("location", "Please Enter a Location").not().isEmpty().trim().escape(),
     check("price", "Please Enter Price").not().isEmpty().isNumeric().toInt().trim().escape(),
   ],

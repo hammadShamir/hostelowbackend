@@ -8,7 +8,6 @@ const hostelSchema = mongoose.Schema({
 
   thumbnail: {
     type: String,
-    required: true,
   },
   title: {
     type: String,
@@ -17,7 +16,6 @@ const hostelSchema = mongoose.Schema({
   },
   desc: {
     type: String,
-    required: true,
   },
   price: {
     type: Number,
