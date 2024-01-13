@@ -71,11 +71,13 @@ const hostelController = {
           _id: element._id,
           userId: element.userId,
           title: element.title,
+          slug: element.slug,
           desc: element.desc,
           price: element.price,
           location: element.location,
           rating: element.rating,
           date: element.date,
+          tags: element.tags,
           discountPrice: element.discountPrice,
           isPublished: element.isPublished,
           amentities: amenities
@@ -102,8 +104,7 @@ const hostelController = {
   },
   getHostelByID: async (req, res) => {
     try {
-      const id = req.query.id;
-      const hostel = await HostelModel.findOne({ _id: id });
+      const hostel = await HostelModel.findOne(req.query);
       if (!hostel) {
         res.status(400).send({ error: "Result Not Found" })
       } else {
@@ -134,10 +135,12 @@ const hostelController = {
           _id: hostel._id,
           userId: hostel.userId,
           title: hostel.title,
+          slug: hostel.slug,
           desc: hostel.desc,
           price: hostel.price,
           location: hostel.location,
           rating: hostel.rating,
+          tags: hostel.tags,
           date: hostel.date,
           discountPrice: hostel.discountPrice,
           isPublished: hostel.isPublished,
@@ -170,10 +173,7 @@ const hostelController = {
     } catch (error) {
       res.status(500).send(error.message)
     }
-  }
-  ,
-
-
+  },
   // Update Hostel
   updateHostel: async (req, res) => {
     try {
