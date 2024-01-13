@@ -11,6 +11,8 @@ authRouter.post("/auth/register", [
         .not().isEmpty().trim().escape(),
     check('phoneNumber', "Valid Phone Number Required")
         .not().isEmpty().trim().escape(),
+    check('role', "User Role Required")
+        .not().isEmpty().trim().escape(),
     check("password", "Password must be Strong")
         .matches(/^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[$@$!%*?&])[A-Za-z\d$@$!%*?&]{8,}/),
     check("email", "Email Required").isEmail().custom((value, { req }) => {

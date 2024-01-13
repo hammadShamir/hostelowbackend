@@ -15,7 +15,8 @@ const hostelController = {
           .status(400)
           .send({ error: errors.array().map((err) => err.msg)[0] });
       } else {
-        const { thumbnail, title, desc, price, location, rating, discountPrice, isPublished } = req.body;
+        const { thumbnail, title, desc, price, location, rating, tags, discountPrice, isPublished } = req.body;
+        const slug = title.replaceAll(" ", "-");
         await HostelModel.create({
           userId: req.payload.aud,
           thumbnail: thumbnail,
@@ -24,6 +25,8 @@ const hostelController = {
           price: price,
           location: location,
           rating: rating,
+          slug: slug,
+          tags: tags,
           isPublished: isPublished,
           discountPrice: discountPrice,
         }).then((user) => {
@@ -180,12 +183,12 @@ const hostelController = {
           .status(400)
           .send({ error: 'hostelId is required' });
       } else {
-        const { hostelId, thumbnail, title, desc, price, location, rating, discountPrice, isPublished } = req.body;
+        const { hostelId, thumbnail, title, desc, price, location, rating, tags, discountPrice, isPublished } = req.body;
 
         if (!hostelId) {
           return res.status(400).send({ error: "hostelId is required for updating a hostel" });
         }
-
+        const slug = title.replaceAll(" ", "-");
         // Find and update the hostel
         const updatedHostel = await HostelModel.findOneAndUpdate(
           { _id: hostelId },
@@ -196,6 +199,8 @@ const hostelController = {
             price: price,
             location: location,
             rating: rating,
+            slug: slug,
+            tags: tags,
             isPublished: isPublished,
             discountPrice: discountPrice,
           },

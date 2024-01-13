@@ -43,7 +43,6 @@ module.exports = {
                     }
                 } else {
                     const { role, isVerified } = payload;
-                    console.log(payload);
                     if (role === "admin" && isVerified) {
                         req.payload = payload;
                         next()

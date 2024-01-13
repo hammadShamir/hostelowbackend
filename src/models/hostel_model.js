@@ -14,6 +14,9 @@ const hostelSchema = mongoose.Schema({
     required: true,
     unique: true,
   },
+  slug: {
+    type: String,
+  },
   desc: {
     type: String,
   },
@@ -21,8 +24,7 @@ const hostelSchema = mongoose.Schema({
     type: Number,
     required: true,
   },
-
-
+  tags: Array,
   location: {
     type: String,
     required: true,
