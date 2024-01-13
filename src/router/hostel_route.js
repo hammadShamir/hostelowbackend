@@ -6,7 +6,8 @@ const { check } = require("express-validator");
 
 // GET ALL HOSTELS
 hostelRouter.get("/hostel/getHostels", HostelController.getHostels);
-hostelRouter.get("/hostel/getHostel", HostelController.getHostelByID);
+hostelRouter.get("/hostel/getHostel", HostelController.getHostel);
+hostelRouter.get("/hostel/search", HostelController.search);
 
 // POST ALL HOSTELS
 hostelRouter.post("/hostel/createhostel", verifyAdminToken,

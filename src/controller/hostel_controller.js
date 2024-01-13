@@ -102,7 +102,7 @@ const hostelController = {
       return res.status(500).send({ error: "Internal Server Error" });
     }
   },
-  getHostelByID: async (req, res) => {
+  getHostel: async (req, res) => {
     try {
       const hostel = await HostelModel.findOne(req.query);
       if (!hostel) {
@@ -172,6 +172,16 @@ const hostelController = {
       }
     } catch (error) {
       res.status(500).send(error.message)
+    }
+  },
+  // SEARCH HOSTEL
+  search: async () => {
+    try {
+      const hostels = await HostelModel.find();
+      res.status(200).send(hostels)
+    } catch (error) {
+      
+      return res.status(500).send({ error: "Internal Server Error" });
     }
   },
   // Update Hostel
