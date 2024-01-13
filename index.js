@@ -14,6 +14,7 @@ const galleryRouter = require("./src/router/gallery_route");
 const AmenitiesRouter = require("./src/router/amentities_route");
 const RoomsRouter = require("./src/router/room_route");
 const BookingRouter = require("./src/router/booking_route");
+const ReviewsRouter = require("./src/router/reviews_route");
 
 // Parse URL-encoded bodies (as sent by HTML forms)
 app.use(express.json({ limit: '5mb' }));
@@ -32,6 +33,7 @@ app.use(baseUrl, AmenitiesRouter);
 app.use(baseUrl, galleryRouter);
 app.use(baseUrl, RoomsRouter);
 app.use(baseUrl, BookingRouter);
+app.use(baseUrl, ReviewsRouter);
 
 app.get("/", (req, res) => {
   res.json({

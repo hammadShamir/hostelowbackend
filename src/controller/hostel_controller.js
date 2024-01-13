@@ -2,6 +2,7 @@ const HostelModel = require("../models/hostel_model");
 const AmentityModel = require("../models/amentities_model");
 const ReviewsModel = require("../models/reviews_model");
 const RoomModel = require("../models/room_model");
+const ReviewModel = require("../models/reviews_model");
 const GalleryModel = require("../models/gallery_model");
 const { validationResult } = require("express-validator");
 
@@ -37,6 +38,8 @@ const hostelController = {
       return res.status(500).send({ error: "Internal Server Error" });
     }
   },
+
+
 
   // GET ALL HOSTEL
   getHostels: async (req, res) => {
@@ -180,7 +183,7 @@ const hostelController = {
       const hostels = await HostelModel.find();
       res.status(200).send(hostels)
     } catch (error) {
-      
+
       return res.status(500).send({ error: "Internal Server Error" });
     }
   },
