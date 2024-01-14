@@ -4,6 +4,7 @@ const ReviewsModel = require("../models/reviews_model");
 const RoomModel = require("../models/room_model");
 const GalleryModel = require("../models/gallery_model");
 const { validationResult } = require("express-validator");
+const { buildQuery } = require("../helpers/search_filters");
 
 const hostelController = {
   // Add Hostel
@@ -41,7 +42,8 @@ const hostelController = {
   // GET ALL HOSTEL
   getHostels: async (req, res) => {
     try {
-      const hostels = await HostelModel.find();
+      const queryObject = buildQuery(req.query)
+      const hostels = await HostelModel.find(queryObject);
       let hostelsWithAmenities = [];
 
       for (const element of hostels) {
@@ -99,91 +101,10 @@ const hostelController = {
       }
       res.send({ hostels: hostelsWithAmenities });
     } catch (error) {
-      return res.status(500).send({ error: "Internal Server Error" });
+      return res.status(500).send({ error: error.message });
     }
   },
-  getHostel: async (req, res) => {
-    try {
-      const hostel = await HostelModel.findOne(req.query);
-      if (!hostel) {
-        res.status(400).send({ error: "Result Not Found" })
-      } else {
-        const amenities = await AmentityModel.findOne({
-          hostelId: hostel._id,
-        });
-        const hostelReviews = await ReviewsModel.findOne({
-          hostelId: hostel._id,
-        });
-        const rooms = await RoomModel.find({
-          hostelId: hostel._id,
-        });
-        const gallery = await GalleryModel.findOne({
-          hostelId: hostel._id,
-        });
 
-        const roomsArray = rooms.map(room => ({
-          type: room.type,
-          price: room.price,
-          beds: room.beds,
-          description: room.description,
-          amenities: room.amenities,
-          availability: room.availability,
-          images: room.images,
-          occupancy: room.occupancy
-        }));
-        const hostelData = {
-          _id: hostel._id,
-          userId: hostel.userId,
-          title: hostel.title,
-          slug: hostel.slug,
-          desc: hostel.desc,
-          price: hostel.price,
-          location: hostel.location,
-          rating: hostel.rating,
-          tags: hostel.tags,
-          date: hostel.date,
-          discountPrice: hostel.discountPrice,
-          isPublished: hostel.isPublished,
-          amentities: amenities
-            ? amenities
-            : null,
-          reviews: hostelReviews
-            ? {
-              cleanliness: hostelReviews.cleanliness,
-              amenities: hostelReviews.amenities,
-              location: hostelReviews.location,
-              comfort: hostelReviews.comfort,
-              wifi: hostelReviews.wifi,
-            }
-            : null,
-          rooms: roomsArray.length > 0 ? roomsArray : null,
-          gallery: gallery ? {
-            img0: gallery?.img0,
-            img1: gallery?.img1,
-            img2: gallery?.img2,
-            img3: gallery?.img3,
-            img4: gallery?.img4,
-            others: gallery?.others
-          } : null,
-          thumbnail: hostel.thumbnail,
-        };
-
-        res.status(200).send(hostelData)
-      }
-    } catch (error) {
-      res.status(500).send(error.message)
-    }
-  },
-  // SEARCH HOSTEL
-  search: async () => {
-    try {
-      const hostels = await HostelModel.find();
-      res.status(200).send(hostels)
-    } catch (error) {
-      
-      return res.status(500).send({ error: "Internal Server Error" });
-    }
-  },
   // Update Hostel
   updateHostel: async (req, res) => {
     try {
