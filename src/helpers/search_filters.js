@@ -1,6 +1,6 @@
 module.exports = {
     buildQuery: (queryParams) => {
-        const { _id, slug, location, min, max } = queryParams;
+        const { _id, slug, location, min, max, userId } = queryParams;
         const queryObject = {};
 
         if (_id) {
