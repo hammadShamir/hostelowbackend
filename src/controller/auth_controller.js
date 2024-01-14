@@ -53,7 +53,7 @@ const authController = {
 
         // Check if user exists
         if (!user) {
-          return res.status(404).send({ errors: 'Invalid credentials' });
+          return res.status(404).send({ error: 'Invalid credentials' });
         }
 
         const isPasswordValid = await bcrypt.compare(password, user.password);
@@ -62,11 +62,11 @@ const authController = {
 
           const accessToken = await signAccessToken(user);
           if (!accessToken) {
-            res.status(500).send({ error: "Internal Server" })
+            res.status(500).send({ error: "Internal Server Error" })
           }
           const refToken = await signRefreshToken(user);
           if (!refToken) {
-            res.status(500).send({ error: "Internal Server" })
+            res.status(500).send({ error: "Internal Server Error" })
           }
 
           const response = {
@@ -82,7 +82,7 @@ const authController = {
           }
           res.status(200).send(response);
         } else {
-          return res.status(404).send({ errors: 'Invalid credentials' });
+          return res.status(404).send({ error: 'Invalid credentials' });
         }
       }
     } catch (error) {
