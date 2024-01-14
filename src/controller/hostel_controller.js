@@ -101,7 +101,7 @@ const hostelController = {
       }
       res.send({ hostels: hostelsWithAmenities });
     } catch (error) {
-      return res.status(500).send({ error: error.message });
+      return res.status(500).send({ error: "Internal Server Error" });
     }
   },
 
