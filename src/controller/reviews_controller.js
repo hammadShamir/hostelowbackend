@@ -1,4 +1,5 @@
 const ReviewsModel = require("../models/reviews_model");
+const AverageReviewsModel = require("../models/average_review_model");
 const { validationResult } = require("express-validator");
 
 const reviewsController = {
@@ -37,13 +38,15 @@ const reviewsController = {
                 geyser,
             } = hostelReviews;
 
+
+
             const existingReview = await ReviewsModel.findOne({ hostelId: hostelId, userId: userId });
 
             if (existingReview) {
-                const updatedReview = await ReviewsModel.updateOne(
+                await ReviewsModel.updateOne(
                     { _id: existingReview._id },
                     {
-                        $inc: { noUser: existingReview.noUser += 1 },
+                        $inc: { noUser: 1 },
                         $set: {
                             wifi: wifi,
                             privateBathroom: privateBathroom,
@@ -67,35 +70,43 @@ const reviewsController = {
                             generator: generator,
                             ups: ups,
                             geyser: geyser,
-                            overallReviews: {
-                                wifi: (existingReview.wifi += sanitizeNumber(wifi)) / (existingReview.noUser + 1),
-                                privateBathroom: (existingReview.privateBathroom += sanitizeNumber(privateBathroom)) / (existingReview.noUser + 1),
-                                bikeParking: (existingReview.bikeParking += sanitizeNumber(bikeParking)) / (existingReview.noUser + 1),
-                                helpDesk: (existingReview.helpDesk += sanitizeNumber(helpDesk)) / (existingReview.noUser + 1),
-                                airCondition: (existingReview.airCondition += sanitizeNumber(airCondition)) / (existingReview.noUser + 1),
-                                keyAccess: (existingReview.keyAccess += sanitizeNumber(keyAccess)) / (existingReview.noUser + 1),
-                                carParking: (existingReview.carParking += sanitizeNumber(carParking)) / (existingReview.noUser + 1),
-                                furnishedRooms: (existingReview.furnishedRooms += sanitizeNumber(furnishedRooms)) / (existingReview.noUser + 1),
-                                cctv: (existingReview.cctv += sanitizeNumber(cctv)) / (existingReview.noUser + 1),
-                                commonAreas: (existingReview.commonAreas += sanitizeNumber(commonAreas)) / (existingReview.noUser + 1),
-                                studyArea: (existingReview.studyArea += sanitizeNumber(studyArea)) / (existingReview.noUser + 1),
-                                laundry: (existingReview.laundry += sanitizeNumber(laundry)) / (existingReview.noUser + 1),
-                                cleaningServices: (existingReview.cleaningServices += sanitizeNumber(cleaningServices)) / (existingReview.noUser + 1),
-                                internet: (existingReview.internet += sanitizeNumber(internet)) / (existingReview.noUser + 1),
-                                bed: (existingReview.bed += sanitizeNumber(bed)) / (existingReview.noUser + 1),
-                                mattress: (existingReview.mattress += sanitizeNumber(mattress)) / (existingReview.noUser + 1),
-                                lunch: (existingReview.lunch += sanitizeNumber(lunch)) / (existingReview.noUser + 1),
-                                dinner: (existingReview.dinner += sanitizeNumber(dinner)) / (existingReview.noUser + 1),
-                                breakfast: (existingReview.breakfast += sanitizeNumber(breakfast)) / (existingReview.noUser + 1),
-                                generator: (existingReview.generator += sanitizeNumber(generator)) / (existingReview.noUser + 1),
-                                ups: (existingReview.ups += sanitizeNumber(ups)) / (existingReview.noUser + 1),
-                                geyser: (existingReview.geyser += sanitizeNumber(geyser)) / (existingReview.noUser + 1),
-                            }
                         }
                     }
                 );
 
-                return res.status(200).json({ success: true, message: "Review updated successfully", data: updatedReview });
+                await AverageReviewsModel.updateOne(
+                    { hostelId: hostelId },
+                    {
+                        $inc: { noUser: 1 },
+                        $set: {
+                            wifi: (existingReview.wifi += sanitizeNumber(wifi)) / (existingReview.noUser),
+                            privateBathroom: (existingReview.privateBathroom += sanitizeNumber(privateBathroom)) / (existingReview.noUser),
+                            bikeParking: (existingReview.bikeParking += sanitizeNumber(bikeParking)) / (existingReview.noUser),
+                            helpDesk: (existingReview.helpDesk += sanitizeNumber(helpDesk)) / (existingReview.noUser),
+                            airCondition: (existingReview.airCondition += sanitizeNumber(airCondition)) / (existingReview.noUser),
+                            keyAccess: (existingReview.keyAccess += sanitizeNumber(keyAccess)) / (existingReview.noUser),
+                            carParking: (existingReview.carParking += sanitizeNumber(carParking)) / (existingReview.noUser),
+                            furnishedRooms: (existingReview.furnishedRooms += sanitizeNumber(furnishedRooms)) / (existingReview.noUser),
+                            cctv: (existingReview.cctv += sanitizeNumber(cctv)) / (existingReview.noUser),
+                            commonAreas: (existingReview.commonAreas += sanitizeNumber(commonAreas)) / (existingReview.noUser),
+                            studyArea: (existingReview.studyArea += sanitizeNumber(studyArea)) / (existingReview.noUser),
+                            laundry: (existingReview.laundry += sanitizeNumber(laundry)) / (existingReview.noUser),
+                            cleaningServices: (existingReview.cleaningServices += sanitizeNumber(cleaningServices)) / (existingReview.noUser),
+                            internet: (existingReview.internet += sanitizeNumber(internet)) / (existingReview.noUser),
+                            bed: (existingReview.bed += sanitizeNumber(bed)) / (existingReview.noUser),
+                            mattress: (existingReview.mattress += sanitizeNumber(mattress)) / (existingReview.noUser),
+                            lunch: (existingReview.lunch += sanitizeNumber(lunch)) / (existingReview.noUser),
+                            dinner: (existingReview.dinner += sanitizeNumber(dinner)) / (existingReview.noUser),
+                            breakfast: (existingReview.breakfast += sanitizeNumber(breakfast)) / (existingReview.noUser),
+                            generator: (existingReview.generator += sanitizeNumber(generator)) / (existingReview.noUser),
+                            ups: (existingReview.ups += sanitizeNumber(ups)) / (existingReview.noUser),
+                            geyser: (existingReview.geyser += sanitizeNumber(geyser)) / (existingReview.noUser),
+                        },
+                    }
+                );
+
+                return res.status(200).json({ message: "Review updated successfully" });
+
             } else {
 
                 const newReview = new ReviewsModel({
@@ -126,7 +137,39 @@ const reviewsController = {
                 });
 
                 const savedReview = await newReview.save();
-                return res.status(200).json({ success: true, message: "Review saved successfully", data: savedReview });
+
+
+                const averageReviewModel = new AverageReviewsModel({
+                    hostelId,
+                    wifi: sanitizeNumber(wifi),
+                    privateBathroom: sanitizeNumber(privateBathroom),
+                    helpDesk: sanitizeNumber(helpDesk),
+                    airCondition: sanitizeNumber(airCondition),
+                    keyAccess: sanitizeNumber(keyAccess),
+                    carParking: sanitizeNumber(carParking),
+                    furnishedRooms: sanitizeNumber(furnishedRooms),
+                    cctv: sanitizeNumber(cctv),
+                    commonAreas: sanitizeNumber(commonAreas),
+                    studyArea: sanitizeNumber(studyArea),
+                    laundry: sanitizeNumber(laundry),
+                    cleaningServices: sanitizeNumber(cleaningServices),
+                    internet: sanitizeNumber(internet),
+                    bed: sanitizeNumber(bed),
+                    mattress: sanitizeNumber(mattress),
+                    lunch: sanitizeNumber(lunch),
+                    dinner: sanitizeNumber(dinner),
+                    breakfast: sanitizeNumber(breakfast),
+                    generator: sanitizeNumber(generator),
+                    ups: sanitizeNumber(ups),
+                    geyser: sanitizeNumber(geyser),
+                });
+
+                await averageReviewModel.save();
+
+                return res.status(200).json({
+                    message: "Review saved successfully",
+
+                });
             }
         } catch (error) {
             return res.status(500).json({ message: "Internal Server Error" });

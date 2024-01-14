@@ -6,8 +6,6 @@ const { check } = require("express-validator");
 
 // GET ALL HOSTELS
 hostelRouter.get("/hostel/getHostels", HostelController.getHostels);
-hostelRouter.get("/hostel/getHostel", HostelController.getHostel);
-hostelRouter.get("/hostel/search", HostelController.search);
 
 // POST ALL HOSTELS
 hostelRouter.post("/hostel/createhostel", verifyAdminToken,
@@ -34,7 +32,7 @@ hostelRouter.post("/hostel/createhostel", verifyAdminToken,
   HostelController.addHostel
 );
 
-// POST ALL HOSTELS
+// Update HOSTEL
 hostelRouter.post("/hostel/updateHostel", verifyAdminToken,
   [
     check("hostelId", "Please provide hostelId").not().isEmpty().trim().escape(),
@@ -43,7 +41,7 @@ hostelRouter.post("/hostel/updateHostel", verifyAdminToken,
   HostelController.updateHostel
 );
 
-// POST ALL HOSTELS
+// Delete HOSTEL
 hostelRouter.delete("/hostel/deleteHostel",
   [
     check("hostelId", "Please provide hostelId").not().isEmpty().trim().escape(),
