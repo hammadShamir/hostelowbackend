@@ -58,6 +58,10 @@ const hostelController = {
           hostelId: element._id,
         });
 
+        const gallery = await GalleryModel.findOne({
+          hostelId: element._id
+        })
+
         const roomsArray = rooms.map(room => ({
           type: room.type,
           price: room.price,
@@ -96,12 +100,26 @@ const hostelController = {
             : null,
           rooms: roomsArray.length > 0 ? roomsArray : null,
           thumbnail: element.thumbnail,
+          ...(queryObject.slug
+            ? {
+              gallery: gallery
+                ? {
+                  img0: gallery.img0,
+                  img1: gallery.img1,
+                  img2: gallery.img2,
+                  img3: gallery.img3,
+                  img4: gallery.img4,
+                  others: gallery.others,
+                }
+                : null,
+            }
+            : {}),
         };
         hostelsWithAmenities.push(hostelWithAmenities);
       }
       res.send({ hostels: hostelsWithAmenities });
     } catch (error) {
-      return res.status(500).send({ error: "Internal Server Error" });
+      return res.status(500).send({ error: error.message });
     }
   },
 
