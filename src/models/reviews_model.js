@@ -149,10 +149,46 @@ const reviewsSchema = mongoose.Schema({
     max: 10
   },
 
+  overallRating: {
+    type: Number,
+    default: 0,
+    min: 0,
+    max: 10,
+  },
+
+  overallReviews: {
+    wifi: { type: Number },
+    privateBathroom: { type: Number },
+    bikeParking: { type: Number },
+    helpDesk: { type: Number },
+    airCondition: { type: Number },
+    keyAccess: { type: Number },
+    carParking: { type: Number },
+    furnishedRooms: { type: Number },
+    cctv: { type: Number },
+    commonAreas: { type: Number },
+    studyArea: { type: Number },
+    laundry: { type: Number },
+    cleaningServices: { type: Number },
+    internet: { type: Number },
+    bed: { type: Number },
+    mattress: { type: Number },
+    lunch: { type: Number },
+    dinner: { type: Number },
+    breakfast: { type: Number },
+    generator: { type: Number },
+    ups: { type: Number },
+    geyser: { type: Number },
+
+  },
+
+
   date: {
     type: Date,
     default: Date.now,
   },
 });
+
+
 
 module.exports = mongoose.model("reviews", reviewsSchema);
