@@ -6,6 +6,9 @@ module.exports = {
         if (_id) {
             queryObject._id = _id;
         }
+        if (userId) {
+            queryObject.userId = userId
+        }
         if (slug) {
             queryObject.slug = slug;
         }
