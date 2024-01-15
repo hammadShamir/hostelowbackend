@@ -98,7 +98,11 @@ const hostelController = {
               wifi: hostelReviews.wifi,
             }
             : null,
-          rooms: roomsArray.length > 0 ? roomsArray : null,
+          ...(queryObject.slug
+            ? {
+              rooms: roomsArray.length > 0 ? roomsArray : null,
+            }
+            : {}),
           thumbnail: element.thumbnail,
           ...(queryObject.slug
             ? {
