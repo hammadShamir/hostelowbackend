@@ -1,10 +1,13 @@
-const AmentitiesRouter = require("express").Router();
+const RoomRouter = require("express").Router();
 const RoomsController = require("../controller/rooms_controller");
 const { check } = require("express-validator");
 const { verifyAdminToken } = require("../helpers/jwt_helpers");
 
+
+RoomRouter.get('/hostel/allRooms/:hostelId', RoomsController.getAllRoomsByHostelId);
+
 // POST ALL ROOMS for a Hostel
-AmentitiesRouter.post(
+RoomRouter.post(
     "/hostel/addRooms",
     verifyAdminToken,
     [
@@ -21,4 +24,6 @@ AmentitiesRouter.post(
     RoomsController.addOrUpdateRooms
 );
 
-module.exports = AmentitiesRouter;
+
+
+module.exports = RoomRouter;
