@@ -2,7 +2,6 @@ const HostelModel = require("../models/hostel_model");
 const AmentityModel = require("../models/amentities_model");
 const ReviewsModel = require("../models/reviews_model");
 const RoomModel = require("../models/room_model");
-const AverageReviewsModel = require("../models/average_review_model");
 const GalleryModel = require("../models/gallery_model");
 const { validationResult } = require("express-validator");
 const { buildQuery } = require("../helpers/search_filters");
@@ -40,8 +39,6 @@ const hostelController = {
     }
   },
 
-
-
   // GET ALL HOSTEL
   getHostels: async (req, res) => {
     try {
@@ -53,7 +50,7 @@ const hostelController = {
         const amenities = await AmentityModel.findOne({
           hostelId: element._id,
         });
-        const hostelReviews = await AverageReviewsModel.findOne({
+        const hostelReviews = await ReviewsModel.findOne({
           hostelId: element._id,
         });
 
@@ -84,6 +81,7 @@ const hostelController = {
           desc: element.desc,
           price: element.price,
           location: element.location,
+          rating: element.rating,
           date: element.date,
           tags: element.tags,
           discountPrice: element.discountPrice,
@@ -91,64 +89,20 @@ const hostelController = {
           amentities: amenities
             ? amenities
             : null,
-
-          rating: hostelReviews
-            ?
-            (
-              hostelReviews.wifi +
-              hostelReviews.privateBathroom +
-              hostelReviews.bikeParking +
-              hostelReviews.helpDesk +
-              hostelReviews.airCondition +
-              hostelReviews.keyAccess +
-              hostelReviews.carParking +
-              hostelReviews.furnishedRooms +
-              hostelReviews.cctv +
-              hostelReviews.commonAreas +
-              hostelReviews.studyArea +
-              hostelReviews.laundry +
-              hostelReviews.cleaningServices +
-              hostelReviews.internet +
-              hostelReviews.bed +
-              hostelReviews.mattress +
-              hostelReviews.lunch +
-              hostelReviews.dinner +
-              hostelReviews.breakfast +
-              hostelReviews.generator +
-              hostelReviews.ups +
-              hostelReviews.geyser
-            ) / 22
-            : null,
-
-
           reviews: hostelReviews
             ? {
+              cleanliness: hostelReviews.cleanliness,
+              amenities: hostelReviews.amenities,
+              location: hostelReviews.location,
+              comfort: hostelReviews.comfort,
               wifi: hostelReviews.wifi,
-              privateBathroom: hostelReviews.privateBathroom,
-              bikeParking: hostelReviews.bikeParking,
-              helpDesk: hostelReviews.helpDesk,
-              airCondition: hostelReviews.airCondition,
-              keyAccess: hostelReviews.keyAccess,
-              carParking: hostelReviews.carParking,
-              furnishedRooms: hostelReviews.furnishedRooms,
-              cctv: hostelReviews.cctv,
-              commonAreas: hostelReviews.commonAreas,
-              studyArea: hostelReviews.studyArea,
-              laundry: hostelReviews.laundry,
-              cleaningServices: hostelReviews.cleaningServices,
-              internet: hostelReviews.internet,
-              bed: hostelReviews.bed,
-              mattress: hostelReviews.mattress,
-              lunch: hostelReviews.lunch,
-              dinner: hostelReviews.dinner,
-              breakfast: hostelReviews.breakfast,
-              generator: hostelReviews.generator,
-              ups: hostelReviews.ups,
-              geyser: hostelReviews.geyser,
             }
             : null,
-
-          rooms: roomsArray.length > 0 ? roomsArray : null,
+          ...(queryObject.slug
+            ? {
+              rooms: roomsArray.length > 0 ? roomsArray : null,
+            }
+            : {}),
           thumbnail: element.thumbnail,
           ...(queryObject.slug
             ? {
