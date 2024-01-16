@@ -34,17 +34,20 @@ const roomsController = {
             if (!foundRoom) {
                 return res.status(404).json({ message: 'Room not found' });
             }
+
             const updateRoom = await RoomModel.findOneAndUpdate({ _id: roomId },
                 {
                     type: req.body.type,
                     price: req.body.price,
                     beds: req.body.beds,
-                    description: req.body.description,
+                    desc: req.body.desc,
+                    discountPrice: req.body.discountPrice,
                     images: req.body.images,
                     amenitities: req.body.amenitities,
                     availability: req.body.availability,
                     occupancy: req.body.occupancy
                 }, { new: true });
+
             return res.status(200).json({ message: 'Room updated successfully'});
 
         } catch (error) {
