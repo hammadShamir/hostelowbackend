@@ -20,7 +20,7 @@ const roomsController = {
 
     deleteRoomById: async (req, res) => {
         try {
-            const { id } = req.params;
+            const { id } = req.body;
             const foundRoom = await RoomModel.findById(id);
             if (!foundRoom) {
                 return res.status(404).json({ message: 'Room not found' });
