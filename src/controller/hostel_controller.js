@@ -49,19 +49,25 @@ const hostelController = {
       for (const element of hostels) {
         const amenities = await AmentityModel.findOne({
           hostelId: element._id,
-        });
+        }).select(`-hostelId -_id -date -__v`);
+
         const hostelReviews = await AverageReviewsModel.findOne({
           hostelId: element._id,
-        });
+        }).select(`-hostelId -_id -date -__v`)
+
 
 
         const rooms = await RoomModel.find({
           hostelId: element._id,
         });
 
-        const gallery = await GalleryModel.findOne({
+        const gallery = queryObject.slug && await GalleryModel.findOne({
           hostelId: element._id
         })
+
+
+
+
 
         const roomsArray = rooms.map(room => ({
           type: room.type,
@@ -91,33 +97,34 @@ const hostelController = {
             ? amenities
             : null,
 
-          rating: hostelReviews
-            ?
-            (
-              hostelReviews.wifi +
-              hostelReviews.privateBathroom +
-              hostelReviews.bikeParking +
-              hostelReviews.helpDesk +
-              hostelReviews.airCondition +
-              hostelReviews.keyAccess +
-              hostelReviews.carParking +
-              hostelReviews.furnishedRooms +
-              hostelReviews.cctv +
-              hostelReviews.commonAreas +
-              hostelReviews.studyArea +
-              hostelReviews.laundry +
-              hostelReviews.cleaningServices +
-              hostelReviews.internet +
-              hostelReviews.bed +
-              hostelReviews.mattress +
-              hostelReviews.lunch +
-              hostelReviews.dinner +
-              hostelReviews.breakfast +
-              hostelReviews.generator +
-              hostelReviews.ups +
-              hostelReviews.geyser
-            ) / Object.keys(hostelReviews).length
-            : null,
+          rating: hostelReviews,
+          // hostelReviews
+          //   ?
+          //   (
+          //     hostelReviews.wifi +
+          //     hostelReviews.privateBathroom +
+          //     hostelReviews.bikeParking +
+          //     hostelReviews.helpDesk +
+          //     hostelReviews.airCondition +
+          //     hostelReviews.keyAccess +
+          //     hostelReviews.carParking +
+          //     hostelReviews.furnishedRooms +
+          //     hostelReviews.cctv +
+          //     hostelReviews.commonAreas +
+          //     hostelReviews.studyArea +
+          //     hostelReviews.laundry +
+          //     hostelReviews.cleaningServices +
+          //     hostelReviews.internet +
+          //     hostelReviews.bed +
+          //     hostelReviews.mattress +
+          //     hostelReviews.lunch +
+          //     hostelReviews.dinner +
+          //     hostelReviews.breakfast +
+          //     hostelReviews.generator +
+          //     hostelReviews.ups +
+          //     hostelReviews.geyser
+          //   ) / Object.keys(hostelReviews).length
+          //   : null,
 
 
 
