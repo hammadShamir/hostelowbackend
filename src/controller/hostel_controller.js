@@ -57,16 +57,13 @@ const hostelController = {
 
 
 
-        const rooms = await RoomModel.find({
+        const rooms = queryObject.slug && await RoomModel.find({
           hostelId: element._id,
         });
 
         const gallery = queryObject.slug && await GalleryModel.findOne({
           hostelId: element._id
         })
-
-
-
 
 
         const roomsArray = rooms.map(room => ({
