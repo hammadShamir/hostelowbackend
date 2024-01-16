@@ -34,7 +34,6 @@ const roomsController = {
             if (!foundRoom) {
                 return res.status(404).json({ message: 'Room not found' });
             }
-            // const updateRoom = await RoomModel.findByIdAndUpdate(roomId, updatedRoom, { new: true });
             const updateRoom = await RoomModel.findOneAndUpdate({ _id: roomId },
                 {
                     type: req.body.type,
@@ -46,7 +45,7 @@ const roomsController = {
                     availability: req.body.availability,
                     occupancy: req.body.occupancy
                 }, { new: true });
-            return res.status(200).json({ message: 'Room updated successfully', message: updateRoom });
+            return res.status(200).json({ message: 'Room updated successfully'});
 
         } catch (error) {
             console.log(error);
