@@ -35,7 +35,7 @@ const roomsController = {
                 return res.status(404).json({ message: 'Room not found' });
             }
 
-            const updateRoom = await RoomModel.findOneAndUpdate({ _id: roomId },
+            await RoomModel.findOneAndUpdate({ _id: roomId },
                 {
                     type: req.body.type,
                     price: req.body.price,
@@ -48,7 +48,7 @@ const roomsController = {
                     occupancy: req.body.occupancy
                 }, { new: true });
 
-            return res.status(200).json({ message: 'Room updated successfully'});
+            return res.status(200).json({ message: 'Room updated successfully' });
 
         } catch (error) {
             console.log(error);
