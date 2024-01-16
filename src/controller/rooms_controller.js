@@ -28,14 +28,25 @@ const roomsController = {
                     .json({ errors: 'All fields are required' });
             }
 
-            const { roomId, updatedRoom } = req.body;
+            const { roomId } = req.body;
 
             const foundRoom = await RoomModel.findOne({ _id: roomId });
             if (!foundRoom) {
                 return res.status(404).json({ message: 'Room not found' });
             }
-            const updatedResult = await RoomModel.findByIdAndUpdate(roomId, updatedRoom, { new: true });
-            return res.status(200).json({ message: 'Room updated successfully' });
+            // const updateRoom = await RoomModel.findByIdAndUpdate(roomId, updatedRoom, { new: true });
+            const updateRoom = await RoomModel.findOneAndUpdate({ _id: roomId },
+                {
+                    type: req.body.type,
+                    price: req.body.price,
+                    beds: req.body.beds,
+                    description: req.body.description,
+                    images: req.body.images,
+                    amenitities: req.body.amenitities,
+                    availability: req.body.availability,
+                    occupancy: req.body.occupancy
+                }, { new: true });
+            return res.status(200).json({ message: 'Room updated successfully', message: updateRoom });
 
         } catch (error) {
             console.log(error);
