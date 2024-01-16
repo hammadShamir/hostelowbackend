@@ -11,8 +11,8 @@ const roomsController = {
                     .json({ errors: 'All fields are required' });
             }
             const rooms = req.body;
-            await RoomModel.insertMany(rooms);
-            res.status(200).json({ message: 'Rooms added successfully' });
+            const addedRooms = await RoomModel.insertMany(rooms);
+            res.status(200).json({ message: 'Rooms added successfully', ...addedRooms });
         } catch (error) {
             return res.status(500).send({ error: "Internal Server Error" });
         }
@@ -44,27 +44,27 @@ const roomsController = {
                     .json({ errors: 'All fields are required' });
             }
 
-            const { roomId } = req.body;
+            const { type, price, beds, desc, discountPrice, images, amenitities, availability, occupancy, roomId } = req.body;
 
             const foundRoom = await RoomModel.findOne({ _id: roomId });
             if (!foundRoom) {
                 return res.status(404).json({ message: 'Room not found' });
             }
 
-            await RoomModel.findOneAndUpdate({ _id: roomId },
+            const updatedRoom = await RoomModel.findOneAndUpdate({ _id: roomId },
                 {
-                    type: req.body.type,
-                    price: req.body.price,
-                    beds: req.body.beds,
-                    desc: req.body.desc,
-                    discountPrice: req.body.discountPrice,
-                    images: req.body.images,
-                    amenitities: req.body.amenitities,
-                    availability: req.body.availability,
-                    occupancy: req.body.occupancy
+                    type: type,
+                    price: price,
+                    beds: beds,
+                    desc: desc,
+                    discountPrice: discountPrice,
+                    images: images,
+                    amenitities: amenitities,
+                    availability: availability,
+                    occupancy: occupancy
                 }, { new: true });
 
-            return res.status(200).json({ message: 'Room updated successfully' });
+            return res.status(200).json({ message: 'Room updated successfully', ...updatedRoom });
 
         } catch (error) {
             return res.status(500).send({ error: "Internal Server Error" });
