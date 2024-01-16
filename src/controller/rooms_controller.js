@@ -18,6 +18,22 @@ const roomsController = {
         }
     },
 
+    deleteRoomById: async (req, res) => {
+        try {
+            const { id } = req.params;
+            const foundRoom = await RoomModel.findById(id);
+            if (!foundRoom) {
+                return res.status(404).json({ message: 'Room not found' });
+            }
+
+            await RoomModel.findByIdAndDelete(id);
+            res.status(200).json({ message: 'Room deleted successfully' });
+
+        } catch (error) {
+            return res.status(500).send({ error: "Internal Server Error" });
+        }
+    },
+
 
     updateRoomByID: async (req, res) => {
         try {
@@ -51,7 +67,6 @@ const roomsController = {
             return res.status(200).json({ message: 'Room updated successfully' });
 
         } catch (error) {
-            console.log(error);
             return res.status(500).send({ error: "Internal Server Error" });
 
         }
