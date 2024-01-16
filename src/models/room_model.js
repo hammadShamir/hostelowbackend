@@ -21,7 +21,7 @@ const RoomSchema = new mongoose.Schema({
         required: true,
     },
 
-    description: { type: String },
+    desc: { type: String },
 
     images: Array,
 
@@ -35,6 +35,10 @@ const RoomSchema = new mongoose.Schema({
     occupancy: {
         type: Number,
         default: true,
+    },
+
+    discountPrice: {
+        type: Number,
     },
 
     date: {
