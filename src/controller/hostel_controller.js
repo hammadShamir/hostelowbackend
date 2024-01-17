@@ -55,8 +55,6 @@ const hostelController = {
           hostelId: element._id,
         }).select(`-hostelId -_id -date -__v`)
 
-
-
         const rooms = !!queryObject.slug && await RoomModel.find({
           hostelId: element._id,
         });
