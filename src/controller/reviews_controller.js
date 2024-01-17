@@ -12,12 +12,12 @@ const reviewsController = {
                     .status(400)
                     .json({ errors: 'All fields are required' });
             }
-            let data;
+            let data = {};
             const { hostelId, userId, wifi, privateBathroom, bikeParking, helpDesk, airCondition, keyAccess, carParking, furnishedRooms, cctv, commonAreas, studyArea, laundry, cleaningServices, internet, bed, mattress, lunch, dinner, breakfast, generator, ups, geyser } = req.body;
             const newReview = await ReviewsModel.create({ hostelId, userId, wifi, privateBathroom, bikeParking, helpDesk, airCondition, keyAccess, carParking, furnishedRooms, cctv, commonAreas, studyArea, laundry, cleaningServices, internet, bed, mattress, lunch, dinner, breakfast, generator, ups, geyser });
             const averageHostelRev = await AverageReviewsModel.findOne({ hostelId: hostelId });
             if (!averageHostelRev) {
-                const savedHostel = await AverageReviewsModel.create({ hostelId, wifi, privateBathroom, bikeParking, helpDesk, airCondition, keyAccess, carParking, furnishedRooms, cctv, commonAreas, studyArea, laundry, cleaningServices, internet, bed, mattress, lunch, dinner, breakfast, generator, ups, geyser });
+                await AverageReviewsModel.create({ hostelId, wifi, privateBathroom, bikeParking, helpDesk, airCondition, keyAccess, carParking, furnishedRooms, cctv, commonAreas, studyArea, laundry, cleaningServices, internet, bed, mattress, lunch, dinner, breakfast, generator, ups, geyser });
             }
             else {
                 const allHostelReview = await ReviewsModel.find({ hostelId: hostelId });
