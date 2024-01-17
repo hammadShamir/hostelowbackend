@@ -43,6 +43,10 @@ const hostelSchema = mongoose.Schema({
     default: 0,
   },
 
+  policies: {
+    type: [String],
+  },
+
   date: {
     type: Date,
     default: Date.now,
