@@ -55,8 +55,6 @@ const hostelController = {
           hostelId: element._id,
         }).select(`-hostelId -_id -date -__v`)
 
-
-
         const rooms = !!queryObject.slug && await RoomModel.find({
           hostelId: element._id,
         });
@@ -88,41 +86,12 @@ const hostelController = {
           rating: element.rating,
           date: element.date,
           tags: element.tags,
+          rating: element.rating,
           discountPrice: element.discountPrice,
           isPublished: element.isPublished,
           amentities: amenities
             ? amenities
             : null,
-
-          rating: hostelReviews,
-          // hostelReviews
-          //   ?
-          //   (
-          //     hostelReviews.wifi +
-          //     hostelReviews.privateBathroom +
-          //     hostelReviews.bikeParking +
-          //     hostelReviews.helpDesk +
-          //     hostelReviews.airCondition +
-          //     hostelReviews.keyAccess +
-          //     hostelReviews.carParking +
-          //     hostelReviews.furnishedRooms +
-          //     hostelReviews.cctv +
-          //     hostelReviews.commonAreas +
-          //     hostelReviews.studyArea +
-          //     hostelReviews.laundry +
-          //     hostelReviews.cleaningServices +
-          //     hostelReviews.internet +
-          //     hostelReviews.bed +
-          //     hostelReviews.mattress +
-          //     hostelReviews.lunch +
-          //     hostelReviews.dinner +
-          //     hostelReviews.breakfast +
-          //     hostelReviews.generator +
-          //     hostelReviews.ups +
-          //     hostelReviews.geyser
-          //   ) / Object.keys(hostelReviews).length
-          //   : null,
-
 
 
           reviews: hostelReviews
@@ -176,6 +145,7 @@ const hostelController = {
             }
             : {}),
         };
+
         hostelsWithAmenities.push(hostelWithAmenities);
       }
       res.send({ hostels: hostelsWithAmenities });
