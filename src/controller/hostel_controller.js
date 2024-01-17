@@ -88,6 +88,7 @@ const hostelController = {
           tags: element.tags,
           rating: element.rating,
           discountPrice: element.discountPrice,
+          policies: element.policies,
           isPublished: element.isPublished,
           amentities: amenities
             ? amenities
@@ -163,7 +164,7 @@ const hostelController = {
           .status(400)
           .send({ error: 'hostelId is required' });
       } else {
-        const { hostelId, thumbnail, title, desc, price, location, rating, tags, discountPrice, isPublished } = req.body;
+        const { hostelId, thumbnail, title, desc, price, location, rating, tags, policies, discountPrice, isPublished } = req.body;
 
         if (!hostelId) {
           return res.status(400).send({ error: "hostelId is required for updating a hostel" });
@@ -180,11 +181,12 @@ const hostelController = {
             location: location,
             rating: rating,
             slug: slug,
+            policies: policies,
             tags: tags,
             isPublished: isPublished,
             discountPrice: discountPrice,
           },
-          { new: true } // Return the updated document
+          { new: true }
         );
 
         if (!updatedHostel) {
