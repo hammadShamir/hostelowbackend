@@ -42,8 +42,11 @@ const hostelController = {
   // GET ALL HOSTEL
   getHostels: async (req, res) => {
     try {
+      const page = parseInt(req.query.page) || 1;
+      const limit = parseInt(req.query.limit) || 10;
+      const skip = (page - 1) * limit;
       const queryObject = buildQuery(req.query)
-      const hostels = await HostelModel.find(queryObject);
+      const hostels = await HostelModel.find(queryObject).skip(skip).limit(limit);
       let hostelsWithAmenities = [];
 
       for (const element of hostels) {
