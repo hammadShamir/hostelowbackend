@@ -94,6 +94,7 @@ const hostelController = {
             ? amenities
             : null,
 
+          reviewCount: element.reviewCount ?? 0,
 
           reviews: hostelReviews
             ? {

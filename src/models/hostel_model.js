@@ -43,6 +43,11 @@ const hostelSchema = mongoose.Schema({
     default: 0,
   },
 
+  reviewCount: {
+    type: Number,
+    default: 0,
+  },
+
   policies: {
     type: [String],
   },
