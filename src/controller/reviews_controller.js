@@ -111,7 +111,7 @@ const reviewsController = {
                 const averageRating = ratingValues.length > 0 ? sum / ratingValues.length : 0;
 
                 console.log(averageRating);
-                await HostelModel.findOneAndUpdate({ _id: hostelId }, { rating: averageRating });
+                await HostelModel.findOneAndUpdate({ _id: hostelId }, { rating: averageRating  });
             }
 
             const ratingValues = [
