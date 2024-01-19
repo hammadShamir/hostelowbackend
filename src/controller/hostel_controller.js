@@ -46,6 +46,8 @@ const hostelController = {
       const limit = parseInt(req.query.limit) || 10;
       const skip = (page - 1) * limit;
       const queryObject = buildQuery(req.query)
+
+      const totalItems = await HostelModel.countDocuments(queryObject);
       const hostels = await HostelModel.find(queryObject).skip(skip).limit(limit);
       let hostelsWithAmenities = [];
 
@@ -153,7 +155,13 @@ const hostelController = {
 
         hostelsWithAmenities.push(hostelWithAmenities);
       }
-      res.send({ hostels: hostelsWithAmenities });
+      res.send({
+        hostels: hostelsWithAmenities, pagination: {
+          currentPage: page,
+          totalPages: Math.ceil(totalItems / limit),
+          totalItems: totalItems,
+        }
+      });
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }
