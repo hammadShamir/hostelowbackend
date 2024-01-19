@@ -50,7 +50,9 @@ const reviewsController = {
 
                 data = await AverageReviewsModel.findOneAndUpdate(
                     { hostelId: hostelId },
+
                     {
+
                         $set: {
                             wifi: allReviews.wifi.reduce((acc, cv) => acc + cv, 0) / allReviews.wifi.length,
                             privateBathroom: allReviews.privateBathroom.reduce((acc, cv) => acc + cv, 0) / allReviews.privateBathroom.length,
@@ -142,7 +144,7 @@ const reviewsController = {
             const averageRating = ratingValues.length > 0 ? sum / ratingValues.length : 0;
 
             console.log(averageRating);
-            await HostelModel.findOneAndUpdate({ _id: hostelId }, { rating: averageRating });
+            await HostelModel.findOneAndUpdate({ _id: hostelId }, { rating: averageRating, $inc: { reviewCount: 1 } });
 
             res.json({ message: "Reviews Added", review: newReview })
 
