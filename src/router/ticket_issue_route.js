@@ -25,7 +25,7 @@ TicketIssueRouter.put("/hostel/updateTicketStatus",
     TicketIssueController.updateTicketStatus);
 
 // Fetch ticket by either user or hostel
-TicketIssueRouter.get("/hostel/ticket", TicketIssueController.fetchTicket);
+TicketIssueRouter.post("/hostel/fetchTicket", TicketIssueController.fetchTicket);
 
 // delete ticket by ticket id
 TicketIssueRouter.delete("/hostel/ticket",
