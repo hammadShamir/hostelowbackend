@@ -8,9 +8,21 @@ const ticketIssueSchema = mongoose.Schema({
         required: true,
     },
 
+    userId: {
+        type: String,
+        ref: 'auths',
+        required: true
+    },
+
     hostelId: {
         type: String,
         ref: 'hostel',
+        required: true
+    },
+
+    roomId: {
+        type: String,
+        ref: 'rooms',
         required: true
     },
 
