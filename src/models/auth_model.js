@@ -8,6 +8,22 @@ const authSchema = mongoose.Schema({
         type: String,
         required: true,
     },
+
+    hostelName: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "hostel",
+    },
+
+    hostelId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "hostel",
+    },
+
+    roomId: {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "rooms",
+    },
+
     email: {
         type: String,
         required: true,
@@ -23,7 +39,7 @@ const authSchema = mongoose.Schema({
     },
     role: {
         type: String,
-        enum : ["user","admin",'superadmin'],
+        enum: ["user", "admin", 'superadmin'],
         required: true
     },
     isVerified: {

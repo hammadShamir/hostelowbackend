@@ -15,13 +15,14 @@ const ticketIssueController = {
             }
 
             else {
-                const { email, hostelId, roomId, ticketIssue, userId } = req.body;
+                const { email, hostelId, roomId, ticketIssue, userId, hostelName } = req.body;
                 const newticketIssue = await ticketIssueModel.create({
                     email: email,
                     hostelId: hostelId,
                     ticketIssue: ticketIssue,
                     roomId: roomId,
-                    userId: userId
+                    userId: userId,
+                    hostelName: hostelName,
                 });
 
                 return res.json({ data: newticketIssue, message: "Ticket Created" });
@@ -64,7 +65,7 @@ const ticketIssueController = {
                 },
             });
         } catch (error) {
-            return res.status(500).json({ success: false, message: error });
+            return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
 
@@ -76,18 +77,17 @@ const ticketIssueController = {
                     .status(400)
                     .send({ error: errors.array().map((err) => err.msg)[0] });
             }
-            const { ticketId, status } = req.body;
+            const { ticketId, status, ticketIssue } = req.body;
             const ticket = await ticketIssueModel.findById(ticketId);
 
             if (!ticket) {
                 return res.status(404).json({ message: "Ticket not found" });
             }
 
-            ticket.status = status;
-            await ticket.save();
-            return res.json({ data: ticket, message: "Ticket status updated successfully" });
+            await ticketIssueModel.findOneAndUpdate({ _id: ticketId }, { status: status, ticketIssue: ticketIssue });
+            return res.json({ message: "Ticket status updated successfully" });
         } catch (error) {
-            return res.status(500).json({ success: false, message: error.message });
+            return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
 
@@ -102,9 +102,9 @@ const ticketIssueController = {
             }
             const { ticketId } = req.body;
             await ticketIssueModel.findByIdAndDelete(ticketId);
-            return res.status(404).json({ message: "Ticket Deleted" });
+            return res.status(200).json({ message: "Ticket Deleted" });
         } catch (error) {
-            return res.status(500).json({ success: false, message: error.message });
+            return res.status(500).json({ error: 'Internal Server Error' });
         }
     },
 };
