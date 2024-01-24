@@ -20,6 +20,12 @@ const ticketIssueSchema = mongoose.Schema({
         required: true
     },
 
+    hostelName: {
+        type: String,
+        ref: 'hostel',
+        required: true
+    },
+
     roomId: {
         type: String,
         ref: 'rooms',

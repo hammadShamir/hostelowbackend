@@ -17,12 +17,7 @@ TicketIssueRouter.post(
 );
 
 // Update ticket Status
-TicketIssueRouter.put("/hostel/updateTicketStatus",
-    [
-        check("ticketId", "Please Enter tickedId").not().isEmpty().trim().escape(),
-        check("status", "Enter ticket status").not().isEmpty().trim().escape(),
-    ],
-    TicketIssueController.updateTicketStatus);
+TicketIssueRouter.put("/hostel/updateTicketStatus", TicketIssueController.updateTicketStatus);
 
 // Fetch ticket by either user or hostel
 TicketIssueRouter.post("/hostel/fetchTicket", TicketIssueController.fetchTicket);
