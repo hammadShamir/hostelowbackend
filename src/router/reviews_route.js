@@ -13,12 +13,6 @@ ReviewsRouter.post(
 );
 
 
-ReviewsRouter.get(
-    "/hostel/getReviews",
-    [
-        check("hostelId", "Please Enter Hostel ID").not().isEmpty().trim().escape(),
-    ],
-    ReviewsController.getHostelReviews
-);
+ReviewsRouter.post("/hostel/getReviews", ReviewsController.getHostelReviews);
 
 module.exports = ReviewsRouter;
