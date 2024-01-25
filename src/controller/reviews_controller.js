@@ -111,7 +111,7 @@ const reviewsController = {
                 const averageRating = ratingValues.length > 0 ? sum / ratingValues.length : 0;
 
                 console.log(averageRating);
-                await HostelModel.findOneAndUpdate({ _id: hostelId }, { rating: averageRating  });
+                await HostelModel.findOneAndUpdate({ _id: hostelId }, { rating: averageRating });
             }
 
             const ratingValues = [
@@ -162,11 +162,20 @@ const reviewsController = {
                     .status(400)
                     .json({ errors: 'All fields are required' });
             }
-            const { hostelId } = req.body;
-            const hostelReviews = await ReviewsModel.find({ hostelId: hostelId });
-            if (!hostelReviews) {
-                return res.status(400)
-                    .json({ errors: 'No Reviews Found' });
+            const { hostelId, userId } = req.body;
+            let query;
+            if (hostelId) {
+                query = { hostelId: hostelId };
+            } else if (userId) {
+                query = { userId: userId };
+            } else {
+                return res.status(400).json({ errors: 'Either hostelId or userId is required' });
+            }
+
+            const hostelReviews = await ReviewsModel.find(query);
+
+            if (!hostelReviews || hostelReviews.length === 0) {
+                return res.status(400).json({ errors: 'No Reviews Found' });
             }
             return res.json(hostelReviews);
 
