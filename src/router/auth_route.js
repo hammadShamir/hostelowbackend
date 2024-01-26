@@ -54,6 +54,13 @@ authRouter.post("/auth/verifyOTP", [
 
 
 authRouter.post("/auth/updateAccount/:userId", AuthController.updateAccount);
+
+authRouter.post("/auth/forgetPassword",
+    [
+        check("email", "Enter a valid email").not().isEmpty().trim().escape().isEmail(),
+    ],
+    AuthController.forgetPassword);
+
 authRouter.get("/auth/user", AuthController.getAllUsers);
 
 authRouter
