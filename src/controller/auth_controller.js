@@ -1,11 +1,12 @@
 const AuthModel = require("../models/auth_model");
 const OTPModel = require("../models/otp_model");
+const ForgetPasswordModel = require("../models/forget_password_model");
 const { validationResult } = require("express-validator");
-
 const bcrypt = require("bcrypt");
 
 const { signAccessToken, signRefreshToken, verifyRefreshToken } = require("../helpers/jwt_helpers");
 const { generateOTP, sendEmail } = require("../helpers/otpVerification");
+const { sendEmailForPassword } = require("../helpers/forget_password_verification");
 
 const authController = {
   // Register User
@@ -237,6 +238,47 @@ const authController = {
   },
 
 
+
+  forgetPassword: async (req, res) => {
+    try {
+      const { email } = req.body;
+      const user = await AuthModel.findOne({ email: email });
+      if (user) {
+        const salt = await bcrypt.genSalt(10);
+        const newPassword = generateRandomString(8);
+        const securePassword = bcrypt.hashSync(newPassword, salt);
+        await ForgetPasswordModel.create({
+          email: email,
+          password: securePassword
+        });
+
+        const emailResult = await sendEmailForPassword(email, securePassword);
+        res.status(200).send({ message: "Email Sent successfully" });
+      }
+      else {
+        res.status(200).send({ message: "Email Sent successfully" });
+
+      }
+    } catch (error) {
+      console.log(error);
+      res.status(500).send({ error: 'Internal Server Error' });
+    }
+  },
+
 };
+
+
+const generateRandomString = (length) => {
+  const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+  let randomString = '';
+
+  for (let i = 0; i < length; i++) {
+    const randomIndex = Math.floor(Math.random() * characters.length);
+    randomString += characters.charAt(randomIndex);
+  }
+
+  return randomString;
+};
+
 
 module.exports = authController;
