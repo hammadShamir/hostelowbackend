@@ -61,6 +61,16 @@ authRouter.post("/auth/forgetPassword",
     ],
     AuthController.forgetPassword);
 
+
+authRouter.post("/auth/checkHash", AuthController.checkHash);
+
+authRouter.post("/auth/resetPassword",
+    [
+        check("password", "Enter a valid email").not().isEmpty().trim().escape().isEmail(),
+        check("hash", "Enter a valid email").not().isEmpty().trim().escape().isEmail(),
+    ],
+    AuthController.verifyForgetPassword);
+
 authRouter.get("/auth/user", AuthController.getAllUsers);
 
 authRouter
