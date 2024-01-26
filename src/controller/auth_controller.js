@@ -247,20 +247,53 @@ const authController = {
         const salt = await bcrypt.genSalt(10);
         const newPassword = generateRandomString(8);
         const securePassword = bcrypt.hashSync(newPassword, salt);
+        await ForgetPasswordModel.findOneAndDelete({ email: email });
         await ForgetPasswordModel.create({
           email: email,
           password: securePassword
         });
 
-        const emailResult = await sendEmailForPassword(email, securePassword);
+        await sendEmailForPassword(email, securePassword);
         res.status(200).send({ message: "Email Sent successfully" });
       }
       else {
         res.status(200).send({ message: "Email Sent successfully" });
-
       }
     } catch (error) {
-      console.log(error);
+      res.status(500).send({ error: 'Internal Server Error' });
+    }
+  },
+
+
+  checkHash: async (req, res) => {
+    try {
+      const { hash } = req.body;
+      const hashExisting = await ForgetPasswordModel.findOne({ password: hash });
+      if (hashExisting) {
+        res.status(200).send({ message: hash });
+      }
+      else {
+        res.status(400).send({ error: "No existing data" });
+      }
+    } catch (error) {
+      res.status(500).send({ error: 'Internal Server Error' });
+    }
+  },
+
+  verifyForgetPassword: async (req, res) => {
+    try {
+      const { password, hash } = req.body;
+      const hashExisting = await ForgetPasswordModel.findOne({ password: hash });
+      if (hashExisting) {
+        const salt = await bcrypt.genSalt(10);
+        const securePassword = bcrypt.hashSync(password, salt);
+        await AuthModel.findOneAndUpdate({ email: hashExisting.email }, { password: securePassword });
+        res.status(200).send({ message: 'Password Updated' });
+      }
+      else {
+        res.status(400).send({ error: "No Existing User" });
+      }
+    } catch (error) {
       res.status(500).send({ error: 'Internal Server Error' });
     }
   },
