@@ -10,7 +10,7 @@ const authSchema = mongoose.Schema({
     },
 
     hostelName: {
-        type: mongoose.Schema.Types.ObjectId,
+        type: mongoose.Schema.Types.String,
         ref: "hostel",
     },
 
