@@ -5,6 +5,8 @@ const { verifyAdminToken } = require("../helpers/jwt_helpers");
 
 
 RoomRouter.get('/hostel/allRooms/:hostelId', RoomsController.getAllRoomsByHostelId);
+RoomRouter.get('/hostel/rooms/:roomId', RoomsController.getAllRoomsByRoomId);
+// RoomRouter.get('/hostel/viewRooms/:hostelId', RoomsController.getAllRoomsByHostelId);
 RoomRouter.post('/hostel/updateRoom', RoomsController.updateRoomByID);
 RoomRouter.delete('/hostel/deleteRoom', RoomsController.deleteRoomById);
 
