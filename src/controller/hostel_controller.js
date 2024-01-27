@@ -70,11 +70,8 @@ const hostelController = {
           hostelId: element._id
         })
 
-
-
-
-
         const roomsArray = !!queryObject.slug && rooms.map(room => ({
+          _id: room._id,
           type: room.type,
           price: room.price,
           beds: room.beds,
@@ -89,8 +86,6 @@ const hostelController = {
           const hostelAllRooms = await RoomModel.find();
           return res.send({ rooms: hostelAllRooms });
         }
-
-
 
         if (!room) {
           const hostelWithAmenities = {
