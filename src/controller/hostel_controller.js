@@ -66,21 +66,23 @@ const hostelController = {
           hostelId: element._id,
         });
 
+        // console.log(rooms);
         const gallery = !!queryObject.slug && await GalleryModel.findOne({
           hostelId: element._id
         })
 
-        const roomsArray = !!queryObject.slug && rooms.map(room => ({
-          _id: room._id,
-          type: room.type,
-          price: room.price,
-          beds: room.beds,
-          description: room.description,
-          amenities: room.amenities,
-          availability: room.availability,
-          images: room.images,
-          occupancy: room.occupancy
-        }));
+        // const roomsArray = !!queryObject.slug && rooms.map(room => ({
+        //   _id: room._id,
+        //   type: room.type,
+        //   price: room.price,
+        //   beds: room.beds,
+        //   description: room.description,
+        //   amenities: room.amenitities,
+        //   availability: room.availability,
+        //   images: room.images,
+        //   occupancy: room.occupancy
+        // }));
+
 
         if (room !== undefined) {
           const hostelAllRooms = await RoomModel.find();
@@ -141,7 +143,7 @@ const hostelController = {
               : null,
             ...(queryObject.slug
               ? {
-                rooms: roomsArray.length > 0 ? roomsArray : null,
+                rooms: rooms.length > 0 ? rooms : null,
               }
               : {}),
             thumbnail: element.thumbnail,
