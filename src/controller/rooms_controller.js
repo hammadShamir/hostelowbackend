@@ -96,6 +96,23 @@ const roomsController = {
             res.status(500).send({ error: "Internal Server Error", message: error });
         }
     },
+
+
+    getAllRoomsByRoomId: async (req, res) => {
+        try {
+            const { roomId } = req.params;
+            const rooms = await RoomModel.find({ _id: roomId });
+            if (rooms) {
+                res.status(200).json({ rooms });
+            } else {
+                res.status(400).json({ message: 'No Rooms Found' });
+            }
+
+        } catch (error) {
+            console.log(error);
+            res.status(500).send({ error: "Internal Server Error" });
+        }
+    },
 };
 
 module.exports = roomsController;

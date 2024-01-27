@@ -47,6 +47,8 @@ const hostelController = {
       const skip = (page - 1) * limit;
       const queryObject = buildQuery(req.query)
 
+      const { room } = req.query;
+
       const totalItems = await HostelModel.countDocuments(queryObject);
       const hostels = await HostelModel.find(queryObject).skip(skip).limit(limit);
       let hostelsWithAmenities = [];
@@ -69,6 +71,9 @@ const hostelController = {
         })
 
 
+
+
+
         const roomsArray = !!queryObject.slug && rooms.map(room => ({
           type: room.type,
           price: room.price,
@@ -80,88 +85,106 @@ const hostelController = {
           occupancy: room.occupancy
         }));
 
-        const hostelWithAmenities = {
-          _id: element._id,
-          userId: element.userId,
-          title: element.title,
-          slug: element.slug,
-          desc: element.desc,
-          price: element.price,
-          location: element.location,
-          rating: element.rating,
-          date: element.date,
-          tags: element.tags,
-          rating: element.rating,
-          discountPrice: element.discountPrice,
-          policies: element.policies,
-          isPublished: element.isPublished,
-          amentities: amenities
-            ? amenities
-            : null,
+        if (room !== undefined) {
+          const hostelAllRooms = await RoomModel.find();
+          return res.send({ rooms: hostelAllRooms });
+        }
 
-          reviewCount: element.reviewCount ?? 0,
 
-          reviews: hostelReviews
-            ? {
-              cleanliness: hostelReviews.cleanliness,
-              amenities: hostelReviews.amenities,
-              location: hostelReviews.location,
-              comfort: hostelReviews.comfort,
-              wifi: hostelReviews.wifi,
-              privateBathroom: hostelReviews.privateBathroom,
-              bikeParking: hostelReviews.bikeParking,
-              helpDesk: hostelReviews.helpDesk,
-              airCondition: hostelReviews.airCondition,
-              keyAccess: hostelReviews.keyAccess,
-              carParking: hostelReviews.carParking,
-              furnishedRooms: hostelReviews.furnishedRooms,
-              cctv: hostelReviews.cctv,
-              commonAreas: hostelReviews.commonAreas,
-              studyArea: hostelReviews.studyArea,
-              laundry: hostelReviews.laundry,
-              cleaningServices: hostelReviews.cleaningServices,
-              internet: hostelReviews.internet,
-              bed: hostelReviews.bed,
-              mattress: hostelReviews.mattress,
-              lunch: hostelReviews.lunch,
-              dinner: hostelReviews.dinner,
-              breakfast: hostelReviews.breakfast,
-              generator: hostelReviews.generator,
-              ups: hostelReviews.ups,
-              geyser: hostelReviews.geyser,
-            }
-            : null,
-          ...(queryObject.slug
-            ? {
-              rooms: roomsArray.length > 0 ? roomsArray : null,
-            }
-            : {}),
-          thumbnail: element.thumbnail,
-          ...(queryObject.slug
-            ? {
-              gallery: gallery
-                ? {
-                  img0: gallery.img0,
-                  img1: gallery.img1,
-                  img2: gallery.img2,
-                  img3: gallery.img3,
-                  img4: gallery.img4,
-                  others: gallery.others,
-                }
-                : null,
-            }
-            : {}),
-        };
 
-        hostelsWithAmenities.push(hostelWithAmenities);
+        if (!room) {
+          const hostelWithAmenities = {
+            _id: element._id,
+            userId: element.userId,
+            title: element.title,
+            slug: element.slug,
+            desc: element.desc,
+            price: element.price,
+            location: element.location,
+            rating: element.rating,
+            date: element.date,
+            tags: element.tags,
+            rating: element.rating,
+            discountPrice: element.discountPrice,
+            policies: element.policies,
+            isPublished: element.isPublished,
+            amentities: amenities
+              ? amenities
+              : null,
+
+            reviewCount: element.reviewCount ?? 0,
+
+            reviews: hostelReviews
+              ? {
+                cleanliness: hostelReviews.cleanliness,
+                amenities: hostelReviews.amenities,
+                location: hostelReviews.location,
+                comfort: hostelReviews.comfort,
+                wifi: hostelReviews.wifi,
+                privateBathroom: hostelReviews.privateBathroom,
+                bikeParking: hostelReviews.bikeParking,
+                helpDesk: hostelReviews.helpDesk,
+                airCondition: hostelReviews.airCondition,
+                keyAccess: hostelReviews.keyAccess,
+                carParking: hostelReviews.carParking,
+                furnishedRooms: hostelReviews.furnishedRooms,
+                cctv: hostelReviews.cctv,
+                commonAreas: hostelReviews.commonAreas,
+                studyArea: hostelReviews.studyArea,
+                laundry: hostelReviews.laundry,
+                cleaningServices: hostelReviews.cleaningServices,
+                internet: hostelReviews.internet,
+                bed: hostelReviews.bed,
+                mattress: hostelReviews.mattress,
+                lunch: hostelReviews.lunch,
+                dinner: hostelReviews.dinner,
+                breakfast: hostelReviews.breakfast,
+                generator: hostelReviews.generator,
+                ups: hostelReviews.ups,
+                geyser: hostelReviews.geyser,
+              }
+              : null,
+            ...(queryObject.slug
+              ? {
+                rooms: roomsArray.length > 0 ? roomsArray : null,
+              }
+              : {}),
+            thumbnail: element.thumbnail,
+            ...(queryObject.slug
+              ? {
+                gallery: gallery
+                  ? {
+                    img0: gallery.img0,
+                    img1: gallery.img1,
+                    img2: gallery.img2,
+                    img3: gallery.img3,
+                    img4: gallery.img4,
+                    others: gallery.others,
+                  }
+                  : null,
+              }
+              : {}),
+          };
+
+          hostelsWithAmenities.push(hostelWithAmenities);
+        }
       }
+
       res.send({
-        hostels: hostelsWithAmenities, pagination: {
+        hostels: hostelsWithAmenities,
+        pagination: {
           currentPage: page,
           totalPages: Math.ceil(totalItems / limit),
           totalItems: totalItems,
-        }
+        },
       });
+
+
+
+
+
+
+
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }
