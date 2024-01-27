@@ -288,6 +288,7 @@ const authController = {
         const salt = await bcrypt.genSalt(10);
         const securePassword = bcrypt.hashSync(password, salt);
         await AuthModel.findOneAndUpdate({ email: hashExisting.email }, { password: securePassword });
+        await ForgetPasswordModel.findOneAndDelete({ email: email });
         res.status(200).send({ message: 'Password Updated' });
       }
       else {
