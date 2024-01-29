@@ -11,6 +11,7 @@ TicketIssueRouter.post(
         check("roomId", "Please Enter Room ID").not().isEmpty().trim().escape(),
         check("userId", "Please Enter User ID").not().isEmpty().trim().escape(),
         check("email", "Please Enter Your Email").not().isEmpty().trim().escape(),
+        check("hostelName", "Please Enter Hostel Name").not().isEmpty().trim().escape(),
         check("ticketIssue", "Please Enter your Issue").not().isEmpty().trim().escape(),
     ],
     TicketIssueController.createTicket
