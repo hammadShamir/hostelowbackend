@@ -6,15 +6,17 @@ const newsletterController = {
   // Save Email Method
   saveEmail: async function (req, res) {
     try {
-      const errors = validationResult(req);
-      if (!errors.isEmpty()) {
-        return res
-          .status(400)
-          .send({ error: "All fields are required" });
-      }
       const { email } = req.body;
-      await NewsletterModel.create({ email });
-      return res.json({ success: true, message: "User Subscribed" });
+      const user = await NewsletterModel.findOne({ email: email });
+      if (user) {
+        res.json({ message: "User Already Exist" });
+      }
+      else {
+        await NewsletterModel.create({ email });
+        return res.json({ message: "User Subscribed" });
+      }
+
+
     } catch (error) {
       return res.status(500).send({ success: false, message: error.message });
     }
