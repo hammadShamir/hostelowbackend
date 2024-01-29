@@ -102,9 +102,11 @@ const hostelController = {
             date: element.date,
             tags: element.tags,
             rating: element.rating,
+            roomCount: element.roomCount,
             discountPrice: element.discountPrice,
             policies: element.policies,
             isPublished: element.isPublished,
+            roomCount: element.roomCount,
             amentities: amenities
               ? amenities
               : null,
