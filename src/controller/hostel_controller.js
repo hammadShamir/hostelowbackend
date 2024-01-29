@@ -178,12 +178,6 @@ const hostelController = {
         },
       });
 
-
-
-
-
-
-
     } catch (error) {
       return res.status(500).send({ error: error.message });
     }
@@ -248,6 +242,19 @@ const hostelController = {
       res.status(500).json({ message: 'Internal Server Error' });
     }
   }
+  ,
+
+  fetchParticularHostel: async (req, res) => {
+    try {
+      const allHostels = await HostelModel.find();
+      const limitedHostels = allHostels.slice(0, 4);
+      return res.json({ hostels: limitedHostels });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ message: 'Internal Server Error' });
+    }
+  }
+
 
 
 
