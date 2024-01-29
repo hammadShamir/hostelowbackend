@@ -10,6 +10,8 @@ RoomRouter.get('/hostel/rooms/:roomId', RoomsController.getAllRoomsByRoomId);
 RoomRouter.post('/hostel/updateRoom', RoomsController.updateRoomByID);
 RoomRouter.delete('/hostel/deleteRoom', RoomsController.deleteRoomById);
 
+
+
 // POST ALL ROOMS for a Hostel
 RoomRouter.post(
     "/hostel/addRooms",

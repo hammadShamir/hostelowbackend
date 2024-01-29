@@ -1,4 +1,5 @@
 const RoomModel = require("../models/room_model");
+const hostelModel = require("../models/hostel_model");
 const { validationResult } = require("express-validator");
 
 const roomsController = {
@@ -12,8 +13,20 @@ const roomsController = {
             }
             const rooms = req.body;
             const addedRooms = await RoomModel.insertMany(rooms);
+            const hostel = await hostelModel.findOne({ _id: req.body.hostelId });
+            if (hostel) {
+                await hostelModel.findOneAndUpdate(
+                    { _id: req.body.hostelId },
+                    { roomCount: hostel.roomCount + 1 },
+                    { new: true }
+                );
+            }
+
             res.status(200).json({ message: 'Rooms added successfully', ...addedRooms });
+
+
         } catch (error) {
+            console.log(error)
             return res.status(500).send({ error: "Internal Server Error" });
         }
     },
@@ -24,6 +37,15 @@ const roomsController = {
             const foundRoom = await RoomModel.findById(id);
             if (!foundRoom) {
                 return res.status(404).json({ message: 'Room not found' });
+            }
+
+            const hostel = await hostelModel.findOne({ _id: foundRoom.hostelId });
+            if (hostel) {
+                await hostelModel.findOneAndUpdate(
+                    { _id: foundRoom.hostelId },
+                    { roomCount: hostel.roomCount - 1 },
+                    { new: true }
+                );
             }
 
             await RoomModel.findByIdAndDelete(id);
@@ -80,6 +102,9 @@ const roomsController = {
             return res.status(500).send({ error: "Internal Server Error" });
         }
     },
+
+
+
 
     getAllRoomsByHostelId: async (req, res) => {
         try {
